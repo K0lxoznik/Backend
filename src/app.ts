@@ -5,6 +5,6 @@ import authRouter from './routes/auth';
 const app = express();
 
 app.use(morgan('dev'));
-app.use('/auth', authRouter);
+app.use('/api/auth', authRouter);
 
 export default app;
