@@ -6,8 +6,11 @@ import authRouter from './routes/auth';
 const app = express();
 
 client.connect((err) => {
-	if (err) console.error('connection error', err.stack);
-	else console.log('Connected to database!');
+	try {
+		console.log('Connected to database!');
+    } catch (error) {
+        console.error('connection error', err.stack);
+    }
 });
 
 app.use(morgan('dev'));
