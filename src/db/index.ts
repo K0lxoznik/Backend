@@ -1,11 +1,11 @@
 import { Client } from 'pg';
 
 const client = new Client({
-	user: 'doomru_user',
-	password: 'x2B6Ds6DdErzBtVqlnufDznbdyqgqWvu',
-	host: 'dpg-cfhkodkgqg40kli5024g-a.frankfurt-postgres.render.com',
+	user: 'serverdb_user',
+	password: 'dTusg0kty7a1tyGtpRP0IgEgb31vcCGr',
+	host: 'dpg-cfhlppcgqg40klifo9rg-a.frankfurt-postgres.render.com',
 	port: 5432,
-	database: 'doomru',
+	database: 'serverdb',
 	ssl: true,
 });
 
