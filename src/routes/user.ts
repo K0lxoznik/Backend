@@ -1,6 +1,5 @@
 import { createUserJWT, hashPassword } from './../tools/jwt';
 import { NextFunction, Request, Response } from 'express';
-import app from '../app';
 import AppDataSource from '../db';
 import { User } from '../db/entity/User';
 
