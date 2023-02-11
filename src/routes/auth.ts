@@ -1,17 +1,11 @@
+import { signUpUser, signInUser } from './user';
 import { Router } from 'express';
+
 
 const router = Router();
 
-router.get('/', (req, res) => {
-	res.send('Hello auth!');
-});
+router.post('/signin', signInUser);
 
-router.get('/signin', (req, res) => {
-	res.send('Hello sign in!');
-});
-
-router.get('/signup', (req, res) => {
-	res.send('Hello sign up!');
-});
+router.post('/signup', signUpUser);
 
 export default router;
