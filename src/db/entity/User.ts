@@ -1,7 +1,18 @@
 // @ts-nocheck
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm"
+
+export interface IUser {
+    id: number;
+    name: string;
+    secondName: string;
+    email: string;
+    password: string;
+    bio?: string;
+    avatar?: string;
+}
+
 @Entity()
-export class User{
+export class User {
     @PrimaryGeneratedColumn('uuid')
     id: number
 
