@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm'
 import { Realty } from './entity/Realty'
 import { User } from './entity/User'
+
 const AppDataSource = new DataSource({
     ssl: true,
     type: 'postgres',
@@ -13,7 +14,7 @@ const AppDataSource = new DataSource({
     logging: true,
     entities: [User, Realty],
     subscribers: [],
-    migrations: [],
+    migrations: [], 
 })
 
 export default AppDataSource
