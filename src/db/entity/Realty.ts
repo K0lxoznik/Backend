@@ -7,10 +7,10 @@ enum Term { day = 'day', month = 'month' }
 enum Currency { RUB = 'RUB', USD = 'USD', UAH = 'UAH' }
 enum HouseType { brick = 'brick', panel = 'panel', monolith = 'monolith', wood = 'wood', other = 'other' }
 enum Repair { design = 'design', euro = 'euro', dtk = 'dtk', without = 'without' }
-@Entity()
+@Entity({name: 'realties'})
 export class Realty{
     @PrimaryGeneratedColumn('uuid')
-    id: number
+    id: string
 
     @Column('text')
     action : Action

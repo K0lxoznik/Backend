@@ -1,7 +1,9 @@
+import { protect } from './tools/JWT/protect';
 import express from 'express';
 import morgan from 'morgan';
 import AppDataSource from './db';
-import authRouter from './routes/auth';
+import authRouter from './routes/Auth';
+import userRouter from './routes/User';
 
 
 const app = express();
@@ -17,5 +19,9 @@ AppDataSource.initialize()
 app.use(morgan('dev'));
 
 app.use('/api/auth', authRouter);
+app.use(protect);
+app.use('/api/user', userRouter);
+
+
 
 export default app;
