@@ -1,8 +1,8 @@
 // @ts-nocheck
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm"
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
 
 export interface IUser {
-    id: number;
+    id: string;
     name: string;
     secondName: string;
     email: string;
@@ -11,10 +11,10 @@ export interface IUser {
     avatar?: string;
 }
 
-@Entity()
+@Entity({name: 'users'})
 export class User {
     @PrimaryGeneratedColumn('uuid')
-    id: number
+    id: string
 
     @Column({length: 20})
     name: string
@@ -26,7 +26,7 @@ export class User {
     email: string
 
     @Column('text')
-    password: string
+    password: string 
 
     @Column({length: 200})
     bio?: string
