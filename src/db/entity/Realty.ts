@@ -1,14 +1,39 @@
 // @ts-nocheck
-import { Column } from 'typeorm';
-import { Entity, PrimaryGeneratedColumn } from "typeorm"
+import { Column, ManyToMany, ManyToOne, Entity, PrimaryGeneratedColumn, JoinColumn } from "typeorm"
+import { User } from './User';
+
+export interface IRealty {
+    id: string;
+    action: string;
+    type: string;
+    title: string;
+    description: string;
+    primeimage: string;
+    images: string[];
+    address: string;
+    rooms: number;
+    term: string;
+    price: number;
+    currency: string;
+    area: number;
+    floor: number;
+    houseType: string;
+    repair: string;
+    elevator: boolean;
+    electricals: string[];
+    bedrooms: string;
+    user: User;
+}
+
 enum Action { rent = 'rent', buy = 'buy' }
-enum Type { apartment = 'apartment', room = 'room', studio = 'studio', cottage = 'cottage', hostel = 'hostel' }
+enum Type { apartment = 'apartment', room = 'room', studio = 'studio', cottage = 'cottage', hostel = 'hostel' , house = 'house'}
 enum Term { day = 'day', month = 'month' }
 enum Currency { RUB = 'RUB', USD = 'USD', UAH = 'UAH' }
 enum HouseType { brick = 'brick', panel = 'panel', monolith = 'monolith', wood = 'wood', other = 'other' }
 enum Repair { design = 'design', euro = 'euro', dtk = 'dtk', without = 'without' }
+
 @Entity({name: 'realties'})
-export class Realty{
+export class Realty {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
@@ -65,4 +90,8 @@ export class Realty{
 
     @Column('text')
     bedrooms : string
+
+    @ManyToOne(() => User, user => user.realties)
+    @JoinColumn()
+    user: User;
 }

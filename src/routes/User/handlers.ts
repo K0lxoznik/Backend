@@ -9,7 +9,7 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
     const userRepository = AppDataSource.manager.getRepository(User);
     const take = Number(req.query.take) || 50;
     const skip = Number(req.query.page) || 0;
-    const allUsers:IUser[] = await userRepository.find({ take, skip });
+    const allUsers: IUser[] = await userRepository.find({ take, skip });
     res.status(200).json(allUsers);
 }
 
@@ -28,7 +28,7 @@ export const getOneUser = async (req: Request, res: Response, next: NextFunction
     }
 }
 
-export const DeleteOneUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const deleteOneUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userRepository = AppDataSource.manager.getRepository(User);
     const id = req.params.id;
     if (!id) return send400Error(res);
@@ -43,7 +43,7 @@ export const DeleteOneUser = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-export const ChangeUserData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const changeUserData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userRepository = AppDataSource.manager.getRepository(User);
     const id = req.params.id;
     if (!id) return send400Error(res);

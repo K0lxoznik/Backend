@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Realty } from './Realty';
 
 export interface IUser {
     id: string;
@@ -9,6 +10,8 @@ export interface IUser {
     password: string;
     bio?: string;
     avatar?: string;
+    city?: string;
+    realties: Realty[];
 }
 
 @Entity({name: 'users'})
@@ -32,5 +35,11 @@ export class User {
     bio?: string
 
     @Column('text')
+    city?: string;
+
+    @Column('text')
     avatar?: string
+
+    @OneToMany(() => Realty, realty => realty.user)
+    realties: Realty[];
 }
