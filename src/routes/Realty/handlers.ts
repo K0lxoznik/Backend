@@ -1,26 +1,40 @@
-import { send404Error } from './../../tools/Error/404';
-import { send400Error } from './../../tools/Error/400';
-import { send401Error } from './../../tools/Error/401';
-import { Realty, IRealty } from './../../db/entity/Realty';
-import { User, IUser } from './../../db/entity/User';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import AppDataSource from '../../db';
+import { serverError, success } from '../../tools/codes';
+import { CODES } from '../../tools/codes/types';
+import { Realty } from './../../db/entities/Realty';
 
-export const getAllRealties = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const realtyRepository = AppDataSource.manager.getRepository(Realty);
-    const take = Number(req.query.take) || 50;
-    const skip = Number(req.query.page) || 0;
-    const allRealties: IRealty[] = await realtyRepository.find({ take, skip });
-    res.status(200).json(allRealties);
-}
+export const getAllRealties = async (req: Request, res: Response) => {
+	try {
+		const realtyRepository = AppDataSource.manager.getRepository(Realty);
+		const take = Number(req.query.take) || 50;
+		const skip = Number(req.query.page) || 0;
+		const realties = await realtyRepository.find({ take, skip });
+		if (!realties.length) return success(res, CODES.NO_CONTENT, 'No realties found');
+		success(res, CODES.OK, 'Successfully found', realties);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
 
-export const createUserRealty = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    if (!req.params.userId) return send400Error(res);
-    const userRepository = AppDataSource.manager.getRepository(User);
-    const user: User | null = await userRepository.findOneBy({ id: req.params.userId });
-    if (!user) return send404Error(res);    
-    const realtyRepository = AppDataSource.manager.getRepository(Realty);
-    const realty = realtyRepository.create({ ...req.body, user })
-    await realtyRepository.save(realty);
-    res.status(200).json({ realty });
-}
+export const createUserRealty = async (req: any, res: Response) => {
+	try {
+		const realtyRepository = AppDataSource.manager.getRepository(Realty);
+		const realty = realtyRepository.manager.create(Realty, {
+			...req.body,
+			user: {
+				id: req.user.id,
+			},
+		});
+		await realtyRepository.save(realty);
+		success(res, CODES.CREATED, 'Successfully created', realty);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const getOneRealty = async (req: Request, res: Response) => {};
+
+export const updateOneRealty = async (req: Request, res: Response) => {};
+
+export const deleteOneRealty = async (req: Request, res: Response) => {};

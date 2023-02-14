@@ -1,22 +1,19 @@
-import { send400Error } from './../../tools/Error/400';
-import { Request, Response, NextFunction } from 'express';
+import { clientError, serverError, success } from './../../tools/codes/index';
+import { Request, Response } from 'express';
+import { CODES } from '../../tools/codes/types';
 
-interface Data {
-    city: string;
-    countryName: string;
-}
+export const getCity = async (req: Request, res: Response) => {
+	try {
+		const { lat, lon, lang = 'en' } = req.query;
+		if (!lat || !lon) return clientError(res, CODES.BAD_REQUEST, 'Latitude and longitude are required');
 
-export const getCity = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const lat = req.query.lat;
-    const lon = req.query.lon;
-    const lang = req.query.lang || "en";
+		const response = await fetch(
+			`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=${lang}`,
+		);
 
-    const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=${lang}`)
-    const data: Data  = await response.json()
-
-    if (!data) return send400Error(res);
-
-    res.send({
-        city: data.city
-    })
-}
+		const data = await response.json();
+		success(res, CODES.OK, 'Successfully found', data);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
