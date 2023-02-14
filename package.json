@@ -5,7 +5,8 @@
   "scripts": {
     "ts": "tsc -w",
     "dev": "nodemon dist/index.js",
-    "start": "yarn run ts && yarn run dev",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.json",
     "typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/db/index.ts"
   },
   "repository": "https://github.com/K0lxoznik/Backend",

@@ -1,0 +1,188 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "doom-ru-server",
+    "dateExported": "2023-02-14T10:21:34.211Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "821a9363-139d-4e5c-9040-b272b71ad8bd",
+            "name": "realty",
+            "containerId": "",
+            "created": "2023-02-13T17:30:43.982Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "839388d0-f4e5-41b7-ad01-b3ae2cb0d5a7",
+            "name": "user",
+            "containerId": "",
+            "created": "2023-02-13T17:31:14.749Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "4b1b4fd7-8d91-4c02-af5a-da3cf94afcc4",
+            "name": "auth",
+            "containerId": "",
+            "created": "2023-02-13T22:06:30.220Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "d6ea3e1d-7a69-433f-b2f7-808a3c70aec0",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "821a9363-139d-4e5c-9040-b272b71ad8bd",
+            "name": "Create Realty",
+            "url": "http://localhost:3000/api/realty",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-02-13T17:30:52.147Z",
+            "modified": "2023-02-13T23:12:02.957Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlZsYWQiLCJzZWNvbmROYW1lIjoiZWJsYW4iLCJiaW8iOiJUaGUgcHJlc2lkZW50IG9mIHRoZSBVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiLCJhdmF0YXIiOiJ1cmwiLCJlbWFpbCI6InZsYWRAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkRDNBa1NzaTFaM2hzRmlXNE1lMDZCZWV2VlRscTBYQkp3bklYdTliV2I0RC5WZ0FnaGhSai4iLCJpYXQiOjE2NzYzMjk5MDV9.u079OP4cZK0lfEMv_EembeoVs9EaOvwemn1hFIT_dFo"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"action\": \"rent\",\n  \"type\": \"house\",\n  \"title\": \"text\",\n  \"description\": \"text\",\n  \"primeImage\": \"text\",\n  \"images\": [],\n  \"address\": \"text\",\n  \"rooms\": 12,\n  \"term\": \"day\",\n  \"price\": 12,\n  \"currency\": \"RUB\",\n  \"area\": 12,\n  \"floor\": 12,\n  \"houseType\": \"brick\",\n  \"repair\": \"design\",\n  \"elevator\": true,\n  \"electricals\": [],\n  \"bedrooms\": 5\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "ec53edd0-0dec-4893-a584-eeaa1788a156",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "4b1b4fd7-8d91-4c02-af5a-da3cf94afcc4",
+            "name": "Sign Up",
+            "url": "http://localhost:3000/api/auth/signup",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-02-13T17:31:57.711Z",
+            "modified": "2023-02-13T22:44:13.809Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Vlad\",\n  \"secondName\": \"eblan\",\n  \"email\": \"vlad@gmail.com\",\n  \"password\": \"president\",\n  \"bio\": \"The president of the United States of America\",\n  \"avatar\": \"url\",\n  \"city\": \"USA\",\n  \"realties\": []\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "9b5da115-a1c2-4304-8587-c759ac8099ad",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "839388d0-f4e5-41b7-ad01-b3ae2cb0d5a7",
+            "name": "Get All Users",
+            "url": "http://localhost:3000/api/user",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-02-13T17:31:26.705Z",
+            "modified": "2023-02-13T23:12:45.444Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlZsYWQiLCJzZWNvbmROYW1lIjoiZWJsYW4iLCJiaW8iOiJUaGUgcHJlc2lkZW50IG9mIHRoZSBVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiLCJhdmF0YXIiOiJ1cmwiLCJlbWFpbCI6InZsYWRAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkRDNBa1NzaTFaM2hzRmlXNE1lMDZCZWV2VlRscTBYQkp3bklYdTliV2I0RC5WZ0FnaGhSai4iLCJpYXQiOjE2NzYzMjk5MDV9.u079OP4cZK0lfEMv_EembeoVs9EaOvwemn1hFIT_dFo"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f677e4c3-9661-4da6-aebd-124b073dcb87",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "4b1b4fd7-8d91-4c02-af5a-da3cf94afcc4",
+            "name": "Sign In",
+            "url": "http://localhost:3000/api/auth/signin",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-02-13T17:33:26.817Z",
+            "modified": "2023-02-14T00:25:32.218Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"vlad@gmail.com\",\n  \"password\": \"president\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b8be02ba-228d-415d-add0-95c29e57995b",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "821a9363-139d-4e5c-9040-b272b71ad8bd",
+            "name": "Get All Realties",
+            "url": "http://localhost:3000/api/realty",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-02-13T18:12:09.936Z",
+            "modified": "2023-02-13T18:12:31.611Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "0e974d47-bd61-46c9-8f88-647f039b2393",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "839388d0-f4e5-41b7-ad01-b3ae2cb0d5a7",
+            "name": "Get One User",
+            "url": "http://localhost:3000/api/user/2",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-02-13T22:04:12.836Z",
+            "modified": "2023-02-13T23:18:16.363Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQxMDI3OWVmLWM1NjYtNDZiZi04MjMyLWE3MDgzNjQ1YTA1NyIsIm5hbWUiOiJKb2UiLCJzZWNvbmROYW1lIjoiQmlkZW4iLCJiaW8iOiJUaGUgcHJlc2lkZW50IG9mIHRoZSBVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiLCJhdmF0YXIiOiJ1cmwiLCJlbWFpbCI6ImJpZGVuQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJFBZS3ZtTkJadWlYYkJRd1RKWEtDM3VtMEMxVW5FclV5M3A0WVhyTWR4Ly9aU3Y1cmdrUG9xIiwiaWF0IjoxNjc2MzI0ODQxfQ.6HJmzmB8TufqTQy__7Mst7QtUgPkjD_EvJrdkWpfGT8"
+                }
+            ],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "35d6dfdc-b9ec-404b-91f8-544e4e8b976e",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "839388d0-f4e5-41b7-ad01-b3ae2cb0d5a7",
+            "name": "Change User Data",
+            "url": "http://localhost:3000/api/user/337f9f22-1349-4e63-b673-18b8c2059f1f",
+            "method": "PUT",
+            "sortNum": 80000,
+            "created": "2023-02-13T22:06:24.978Z",
+            "modified": "2023-02-13T22:08:38.791Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMzN2Y5ZjIyLTEzNDktNGU2My1iNjczLTE4YjhjMjA1OWYxZiIsIm5hbWUiOiJ2bGFkIiwic2Vjb25kTmFtZSI6ImVibGFuIiwiYmlvIjoidGV4dCIsImF2YXRhciI6InVybCIsImVtYWlsIjoidmxhZEBnbWFpbC5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCQ3V3BSOWhoSkZwTU50SVlxNFUvWXlPMWUueVcvQy5MOVkzLnp5VWc4VndmRjd1bS5WZlNQeSIsImlhdCI6MTY3NjMyNjA2Mn0.1WDbN5KAYj_sN6EzvAudb7o5nM3mxRfjJ0JD3D6dx-I"
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"artem\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "4aba0f9e-c219-4f9b-9676-bbe75fc811bf",
+            "colId": "93662b93-287a-4ed4-9cd7-2132cc0b0dcf",
+            "containerId": "839388d0-f4e5-41b7-ad01-b3ae2cb0d5a7",
+            "name": "Delete User",
+            "url": "http://localhost:3000/api/user/1",
+            "method": "DELETE",
+            "sortNum": 90000,
+            "created": "2023-02-13T22:06:43.525Z",
+            "modified": "2023-02-13T23:14:36.375Z",
+            "headers": [
+                {
+                    "name": "Authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IlZsYWQiLCJzZWNvbmROYW1lIjoiZWJsYW4iLCJiaW8iOiJUaGUgcHJlc2lkZW50IG9mIHRoZSBVbml0ZWQgU3RhdGVzIG9mIEFtZXJpY2EiLCJhdmF0YXIiOiJ1cmwiLCJlbWFpbCI6InZsYWRAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkRDNBa1NzaTFaM2hzRmlXNE1lMDZCZWV2VlRscTBYQkp3bklYdTliV2I0RC5WZ0FnaGhSai4iLCJpYXQiOjE2NzYzMjk5MDV9.u079OP4cZK0lfEMv_EembeoVs9EaOvwemn1hFIT_dFo"
+                }
+            ],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
