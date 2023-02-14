@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import AppDataSource from '../../db';
-import { User } from '../../db/entities/User';
+import { User } from '../../db/entity/User';
 import { clientError, serverError, success } from '../../tools/codes';
 import { CODES } from '../../tools/codes/types';
 

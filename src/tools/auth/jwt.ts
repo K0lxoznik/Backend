@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
-import { User } from '../../db/entities/User';
+import { User } from '../../db/entity/User';
 
 /** ## Create JWT Token
  * The createJWT function creates a JWT token
