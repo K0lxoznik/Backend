@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import config from '../../config';
 import { User } from '../../db/entities/User';
 
 /** ## Create JWT Token
@@ -9,7 +10,7 @@ import { User } from '../../db/entities/User';
  */
 export const createJWT = (user: User) => {
 	const { id, name, secondName, bio, avatar, email, password } = user;
-	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, 'cookies');
+	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, config.JWT_SECRET);
 };
 
 /** ## Hash Password
