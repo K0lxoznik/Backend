@@ -1,7 +1,7 @@
 import { clientError, serverError, success } from './../../tools/codes/index';
 import { Request, Response } from 'express';
 import AppDataSource from '../../db';
-import { User } from '../../db/entities/User';
+import { User } from '../../db/entity/User';
 import { comparePassword, createJWT, hashPassword } from '../../tools/auth/jwt';
 import { CODES } from '../../tools/codes/types';
 

@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
 import config from '../config';
-import { Realty } from './entities/Realty';
-import { User } from './entities/User';
+import { Realty } from './entity/Realty';
+import { User } from './entity/User';
 
 const AppDataSource = new DataSource({
 	ssl: true,
