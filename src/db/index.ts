@@ -6,11 +6,7 @@ import { User } from './entities/User';
 const AppDataSource = new DataSource({
 	ssl: true,
 	type: 'postgres',
-	host: config.DATABASE_HOST,
-	port: config.DATABASE_PORT,
-	username: config.DATABASE_USERNAME,
-	password: config.DATABASE_PASSWORD,
-	database: config.DATABASE_NAME,
+	url: config.DATABASE_URL,
 	synchronize: true,
 	logging: true,
 	entities: [User, Realty],
