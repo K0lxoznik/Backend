@@ -36,7 +36,7 @@ export const getOneUser = async (req: Request, res: Response) => {
 	}
 };
 
-export const changeUserData = async (req: Request, res: Response) => {
+export const updateOneUser = async (req: Request, res: Response) => {
 	try {
 		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, "User's id is required");
 
