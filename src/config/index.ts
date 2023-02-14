@@ -9,5 +9,5 @@ export default {
 	DATABASE_USERNAME: process.env.DATABASE_USERNAME,
 	DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
 	DATABASE_NAME: process.env.DATABASE_NAME,
-	JWT_SECRET: process.env.JWT_SECRET,
+	JWT_SECRET: String(process.env.JWT_SECRET),
 };

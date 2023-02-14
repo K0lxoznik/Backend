@@ -1,3 +1,4 @@
+import { clientError } from './../../tools/codes/index';
 import { Request, Response } from 'express';
 import AppDataSource from '../../db';
 import { serverError, success } from '../../tools/codes';
@@ -33,8 +34,43 @@ export const createUserRealty = async (req: any, res: Response) => {
 	}
 };
 
-export const getOneRealty = async (req: Request, res: Response) => {};
+export const getOneRealty = async (req: Request, res: Response) => {
+	try {
+		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, "Realty's id is required");
+		const realtyTable = AppDataSource.getRepository(Realty);
+		const realty = await realtyTable.findOneBy({ id: +req.params.id})
+		if (!realty) return clientError(res, CODES.NOT_FOUND, 'Realty not found');
+		success(res, CODES.OK, 'Successfully found', realty);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
 
-export const updateOneRealty = async (req: Request, res: Response) => {};
+export const updateOneRealty = async (req: Request, res: Response) => {
+	try {
+		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, "Realty's id is required");
+		const realtyTable = AppDataSource.getRepository(Realty);
+		const realty = await realtyTable.findOneBy({ id: +req.params.id})
+		if (!realty) return clientError(res, CODES.NOT_FOUND, 'Realty not found');
+		
+		realtyTable.merge(realty, req.body);
+		await realtyTable.save(realty);
+		success(res, CODES.OK, 'Successfully updated', realty);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
 
-export const deleteOneRealty = async (req: Request, res: Response) => {};
+};
+
+export const deleteOneRealty = async (req: Request, res: Response) => {
+	try {
+		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, "Realty's id is required");
+		const realtyTable = AppDataSource.getRepository(Realty);
+		const realty = await realtyTable.findOneBy({ id: +req.params.id})
+		if (!realty) return clientError(res, CODES.NOT_FOUND, 'Realty not found');
+		await realtyTable.remove(realty);
+		success(res, CODES.OK, 'Successfully deleted', realty);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
