@@ -7,6 +7,7 @@ const AppDataSource = new DataSource({
 	ssl: true,
 	type: 'postgres',
 	url: config.DATABASE_URL,
+	port: config.DATABASE_PORT,
 	synchronize: true,
 	logging: true,
 	entities: [User, Realty],
