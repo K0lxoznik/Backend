@@ -24,7 +24,6 @@ enum Term {
 enum Currency {
 	RUB = 'RUB',
 	USD = 'USD',
-	UAH = 'UAH',
 }
 
 enum HouseType {
@@ -38,7 +37,7 @@ enum HouseType {
 enum Repair {
 	design = 'design',
 	euro = 'euro',
-	dtk = 'dtk',
+	cosmetic = 'cosmetic',
 	without = 'without',
 }
 
@@ -84,7 +83,7 @@ export class Realty extends Model {
 	@Column({ length: 100 })
 	title: string;
 
-	@Column({ length: 400 })
+	@Column({ length: 1000 })
 	description: string;
 
 	@Column('text')
@@ -113,12 +112,6 @@ export class Realty extends Model {
 
 	@Column('boolean')
 	elevator: boolean;
-
-	@Column({
-		type: 'text',
-		array: true,
-	})
-	electricals: string[];
 
 	@Column('int')
 	bedrooms: number;
