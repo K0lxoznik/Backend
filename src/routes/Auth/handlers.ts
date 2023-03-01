@@ -1,16 +1,51 @@
-import { clientError, serverError, success } from './../../tools/codes/index';
 import { Request, Response } from 'express';
+import nodemailer from 'nodemailer';
 import AppDataSource from '../../db';
 import { User } from '../../db/entity/User';
+import redis from '../../db/redis';
 import { comparePassword, createJWT, hashPassword } from '../../tools/auth/jwt';
 import { CODES } from '../../tools/codes/types';
+import { CreateUser, CreateUserWithCode } from './../../db/entity/User';
+import { clientError, serverError, success } from './../../tools/codes/index';
+import { RequestBody } from './../../types';
 
-export const signUpUser = async (req: Request, res: Response) => {
+export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Response) => {
 	try {
-		const userRepository = AppDataSource.manager.getRepository(User);
-		const user = await userRepository.findOneBy({ email: req.body.email });
-		if (user) return clientError(res, CODES.BAD_REQUEST, 'User with this email already exists');
+		const code = Math.floor(Math.random() * 900000) + 100000;
 
+		await redis.set(`code:${req.body.email}`, code, 'EX', 300);
+
+		let transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				user: process.env.SEND_EMAIL,
+				pass: process.env.SEND_PASSWORD,
+			},
+		});
+
+		let result = await transporter.sendMail({
+			from: 'vladpolisuk159@gmail.com',
+			to: req.body.email,
+			subject: 'DOOM.RU | Verify email',
+			text: `Your code: ${code}`,
+			html: `<h1>Your code: ${code}</h1>`,
+		});
+
+		success(res, CODES.CREATED, 'Code has been send', result.accepted);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Response) => {
+	try {
+		const code = req.body.code;
+		const codeFromRedis = await redis.get(`code:${req.body.email}`);
+		if (!code) return clientError(res, CODES.BAD_REQUEST, 'Missing code');
+		if (!codeFromRedis) return clientError(res, CODES.BAD_REQUEST, 'Code is deprecated');
+		if (+code !== +codeFromRedis) return clientError(res, CODES.BAD_REQUEST, 'Incorrect code');
+
+		const userRepository = AppDataSource.manager.getRepository(User);
 		const newUser = userRepository.manager.create(User, {
 			...req.body,
 			password: await hashPassword(req.body.password),
