@@ -2,6 +2,20 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import Model from '../types';
 import { Realty } from './Realty';
 
+export type CreateUser = {
+	name: string;
+	email: string;
+	password: string;
+	secondName: string;
+	bio?: string;
+	city?: string;
+	avatar?: string;
+};
+
+export type CreateUserWithCode = CreateUser & {
+	code: string;
+};
+
 @Entity({ name: 'users' })
 export class User extends Model {
 	@Column({
