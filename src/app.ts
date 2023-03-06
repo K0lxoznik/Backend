@@ -1,7 +1,7 @@
-import 'reflect-metadata';
+import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
-import cors from 'cors';
+import 'reflect-metadata';
 import { initializeDB } from './db/index';
 import authRouter from './routes/Auth';
 import locationRouter from './routes/Location';

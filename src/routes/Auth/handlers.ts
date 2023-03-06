@@ -1,8 +1,10 @@
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
+import config from '../../config';
 import AppDataSource from '../../db';
 import { User } from '../../db/entity/User';
 import redis from '../../db/redis';
+import { removeProperty } from '../../tools';
 import { comparePassword, createJWT, hashPassword } from '../../tools/auth/jwt';
 import { CODES } from '../../tools/codes/types';
 import { CreateUser, CreateUserWithCode } from './../../db/entity/User';
@@ -18,8 +20,8 @@ export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Respons
 		let transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
-				user: process.env.SEND_EMAIL,
-				pass: process.env.SEND_PASSWORD,
+				user: config.SEND_EMAIL,
+				pass: config.SEND_PASSWORD,
 			},
 		});
 
@@ -53,7 +55,8 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 
 		await AppDataSource.manager.save(newUser);
 		const token = createJWT(newUser);
-		success(res, CODES.CREATED, 'Successfully signed up', token);
+		const responseData = { token, user: removeProperty(newUser, 'createdAt', 'updatedAt') };
+		success(res, CODES.CREATED, 'Successfully signed up', responseData);
 	} catch (error: any) {
 		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
@@ -69,7 +72,8 @@ export const signInUser = async (req: Request, res: Response) => {
 		if (!compared) return clientError(res, CODES.BAD_REQUEST, 'Incorrect email or password');
 
 		const token = createJWT(firstUser);
-		success(res, CODES.ACCEPTED, 'Successfully signed in', token);
+		const responseData = { token, user: removeProperty(firstUser, 'createdAt', 'updatedAt') };
+		success(res, CODES.ACCEPTED, 'Successfully signed in', responseData);
 	} catch (error: any) {
 		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
