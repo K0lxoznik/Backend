@@ -1,9 +1,12 @@
-import { validateEmail } from './../../tools/auth/validateEmail';
 import { Router } from 'express';
-import { signInUser, signUpUser, sendCodeToEmail } from './handlers';
 import { body } from 'express-validator';
+import { protect } from '../../tools/auth/protect';
+import { validateEmail } from './../../tools/auth/validateEmail';
+import { getMe, sendCodeToEmail, signInUser, signUpUser } from './handlers';
 
 const router = Router();
+
+router.get('/me', protect, getMe);
 
 router.post(
 	'/verify',
@@ -12,6 +15,7 @@ router.post(
 	validateEmail,
 	sendCodeToEmail,
 );
+
 router.post(
 	'/signup',
 	body('email').isEmail(),
@@ -20,6 +24,7 @@ router.post(
 	validateEmail,
 	signUpUser,
 );
+
 router.post('/signin', body('email').isEmail(), body('password').isLength({ min: 8 }), signInUser);
 
 export default router;

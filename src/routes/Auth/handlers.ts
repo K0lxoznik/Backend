@@ -11,6 +11,22 @@ import { CreateUser, CreateUserWithCode } from './../../db/entity/User';
 import { clientError, serverError, success } from './../../tools/codes/index';
 import { RequestBody } from './../../types';
 
+export const getMe = async (req: Request, res: Response) => {
+	try {
+		const userRepository = AppDataSource.manager.getRepository(User);
+		// @ts-ignore
+		const user = await userRepository.findOneBy({ id: req.user.id });
+
+		const responseData = {
+			user: removeProperty(user, 'createdAt', 'updatedAt', 'password'),
+		};
+
+		success(res, CODES.OK, 'User has been found', responseData);
+	} catch (error: any) {
+		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
 export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Response) => {
 	try {
 		const code = Math.floor(Math.random() * 900000) + 100000;
