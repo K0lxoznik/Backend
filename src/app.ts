@@ -12,7 +12,7 @@ const app = express();
 
 initializeDB();
 
-app.use(cors({ origin: ['http://localhost:3000'] }));
+app.use(cors({ origin: ['http://localhost:3000', 'https://doom-ru.vercel.app'] }));
 app.use(express.json(), morgan('dev'));
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
