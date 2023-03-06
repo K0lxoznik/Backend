@@ -55,7 +55,10 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 
 		await AppDataSource.manager.save(newUser);
 		const token = createJWT(newUser);
-		const responseData = { token, user: removeProperty(newUser, 'createdAt', 'updatedAt') };
+		const responseData = {
+			token,
+			user: removeProperty(newUser, 'createdAt', 'updatedAt', 'password'),
+		};
 		success(res, CODES.CREATED, 'Successfully signed up', responseData);
 	} catch (error: any) {
 		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
@@ -72,7 +75,10 @@ export const signInUser = async (req: Request, res: Response) => {
 		if (!compared) return clientError(res, CODES.BAD_REQUEST, 'Incorrect email or password');
 
 		const token = createJWT(firstUser);
-		const responseData = { token, user: removeProperty(firstUser, 'createdAt', 'updatedAt') };
+		const responseData = {
+			token,
+			user: removeProperty(firstUser, 'createdAt', 'updatedAt', 'password'),
+		};
 		success(res, CODES.ACCEPTED, 'Successfully signed in', responseData);
 	} catch (error: any) {
 		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
