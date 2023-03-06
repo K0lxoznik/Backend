@@ -4,11 +4,11 @@
  * @param property removable property
  * @returns new object without `property`
  */
-export const removeProperty = <T>(object: T, property: string) => {
+export const removeProperty = <T>(object: T, ...property: string[]) => {
 	const result: any = {};
 
 	for (const key in object) {
-		if (key !== property) {
+		if (!property.includes(key)) {
 			result[key] = object[key];
 		}
 	}
