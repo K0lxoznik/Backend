@@ -17,6 +17,8 @@ export const getMe = async (req: Request, res: Response) => {
 		// @ts-ignore
 		const user = await userRepository.findOneBy({ id: req.user.id });
 
+		if (!user) return clientError(res, CODES.NOT_FOUND, "Your account has been deleted"); 
+
 		const responseData = {
 			user: removeProperty(user, 'createdAt', 'updatedAt', 'password'),
 		};
