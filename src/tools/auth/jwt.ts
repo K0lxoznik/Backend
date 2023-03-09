@@ -8,10 +8,10 @@ import { User } from '../../db/entity/User';
  * @param user User
  * @returns jwt token
  */
-export const createJWT = (user: User) => {
+export const createJWT = (user: User, rememberMe = false) => {
 	const { id, name, secondName, bio, avatar, email, password } = user;
 	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, config.JWT_SECRET, {
-		expiresIn: '14d',
+		expiresIn: rememberMe ? '20d' : '1d',
 	});
 };
 

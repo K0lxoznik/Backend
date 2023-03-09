@@ -83,9 +83,9 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 		});
 
 		await AppDataSource.manager.save(newUser);
-		const token = createJWT(newUser);
+
 		const responseData = {
-			token,
+			token: createJWT(newUser),
 			user: removeProperty(newUser, 'createdAt', 'updatedAt', 'password'),
 		};
 
@@ -109,9 +109,8 @@ export const signInUser = async (req: Request, res: Response) => {
 		if (!compared)
 			return send(res, CODES.BAD_REQUEST, locales[lang].auth.incorrect_email_or_pass);
 
-		const token = createJWT(firstUser);
 		const responseData = {
-			token,
+			token: createJWT(firstUser, req.body.rememberMe),
 			user: removeProperty(firstUser, 'createdAt', 'updatedAt', 'password'),
 		};
 
