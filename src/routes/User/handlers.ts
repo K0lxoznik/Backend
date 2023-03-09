@@ -1,66 +1,71 @@
 import { Request, Response } from 'express';
 import AppDataSource from '../../db';
 import { User } from '../../db/entity/User';
-import { clientError, serverError, success } from '../../tools/codes';
+import locales from '../../locales';
+import { send } from '../../tools/codes';
 import { CODES } from '../../tools/codes/types';
-import local from '../../tools/local';
+import { Language } from '../../types';
 
 export const getAllUsers = async (req: Request, res: Response) => {
 	try {
-		const lang = req.headers['accept-language'] as 'ru' | 'en';
+		// @ts-ignore
+		const lang = req.lang as Language;
 		const userRepository = AppDataSource.manager.getRepository(User);
 		const users = await userRepository.find({
 			take: Number(req.query.take) || 50,
 			skip: Number(req.query.page) || 0,
 		});
 
-		if (!users.length) return success(res, CODES.NO_CONTENT, local[lang].user.no_users);
+		if (!users.length) return send(res, CODES.NO_CONTENT, locales[lang].user.no_users);
 
 		const usersWithoutPassword = users.map((user) => ({ ...user, password: undefined }));
-		success(res, CODES.OK, local[lang].user.found, usersWithoutPassword);
+		send(res, CODES.OK, locales[lang].user.found, usersWithoutPassword);
 	} catch (err: any) {
-		serverError(res, CODES.INTERNAL_SERVER_ERROR, err.message);
+		send(res, CODES.INTERNAL_SERVER_ERROR, err.message);
 	}
 };
 
 export const getOneUser = async (req: Request, res: Response) => {
 	try {
-		const lang = req.headers['accept-language'] as 'ru' | 'en';
-		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, local[lang].user.no_id);
+		// @ts-ignore
+		const lang = req.lang as Language;
+		if (!req.params.id) return send(res, CODES.BAD_REQUEST, locales[lang].user.no_id);
 
 		const userRepository = AppDataSource.manager.getRepository(User);
 		const user = await userRepository.findOneBy({ id: +req.params.id });
-		if (!user) return clientError(res, CODES.NOT_FOUND, local[lang].user.no_user);
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].user.no_user);
 
 		const userWithoutPassword = { ...user, password: undefined };
-		success(res, CODES.OK, local[lang].user.found, userWithoutPassword);
+		send(res, CODES.OK, locales[lang].user.found, userWithoutPassword);
 	} catch (err: any) {
-		serverError(res, CODES.INTERNAL_SERVER_ERROR, err.message);
+		send(res, CODES.INTERNAL_SERVER_ERROR, err.message);
 	}
 };
 
 export const updateOneUser = async (req: Request, res: Response) => {
 	try {
-		const lang = req.headers['accept-language'] as 'ru' | 'en';
-		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, "User's id is required");
+		// @ts-ignore
+		const lang = req.lang as Language;
+		if (!req.params.id) return send(res, CODES.BAD_REQUEST, locales[lang].user.no_id);
 
 		const userRepository = AppDataSource.manager.getRepository(User);
 		const user = await userRepository.findOneBy({ id: +req.params.id });
-		if (!user) return clientError(res, CODES.NOT_FOUND, "User with this id doesn't exist");
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].user.no_user);
 
 		userRepository.merge(user, req.body);
 		const changedUser = await userRepository.save(user);
 		const changedUserWithoutPassword = { ...changedUser, password: undefined };
-		success(res, CODES.CREATED, local[lang].user.found, changedUserWithoutPassword);
+		send(res, CODES.CREATED, locales[lang].user.changed, changedUserWithoutPassword);
 	} catch (error: any) {
-		serverError(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
 };
 
 export const deleteOneUser = async (req: Request, res: Response) => {
 	try {
-		const lang = req.headers['accept-language'] as 'ru' | 'en';
-		if (!req.params.id) return clientError(res, CODES.BAD_REQUEST, "User's id is required");
+		// @ts-ignore
+		const lang = req.lang as Language;
+		if (!req.params.id) return send(res, CODES.BAD_REQUEST, locales[lang].user.no_id);
 
 		const userRepository = AppDataSource.manager.getRepository(User);
 		const user = await userRepository.findOne({
@@ -68,13 +73,13 @@ export const deleteOneUser = async (req: Request, res: Response) => {
 			relations: ['realties'],
 		});
 
-		if (!user) return clientError(res, CODES.NOT_FOUND, local[lang].user.no_user);
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].user.no_user);
 
 		await removeUserRelations(user);
 		await userRepository.remove(user);
-		success(res, CODES.OK, local[lang].user.deleted);
+		send(res, CODES.OK, locales[lang].user.deleted);
 	} catch (err: any) {
-		serverError(res, CODES.INTERNAL_SERVER_ERROR, err.message);
+		send(res, CODES.INTERNAL_SERVER_ERROR, err.message);
 	}
 };
 

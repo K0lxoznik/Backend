@@ -1,6 +1,6 @@
+import { Router } from 'express';
 import { protect } from './../../tools/auth/protect';
 import { getCity } from './handlers';
-import { Router } from 'express';
 
 const router = Router();
 
