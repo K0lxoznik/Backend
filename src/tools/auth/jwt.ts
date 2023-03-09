@@ -10,7 +10,9 @@ import { User } from '../../db/entity/User';
  */
 export const createJWT = (user: User) => {
 	const { id, name, secondName, bio, avatar, email, password } = user;
-	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, config.JWT_SECRET);
+	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, config.JWT_SECRET, {
+		expiresIn: '14d',
+	});
 };
 
 /** ## Hash Password
