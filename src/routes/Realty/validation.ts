@@ -53,8 +53,8 @@ export const createUserRealtyValidation = [
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_bathrooms),
 	body('images')
 		.isArray()
-		.isLength({ min: 1, max: 10 })
-		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_images),
+		.custom((value) => value.length < 1 || value.length > 10 ? false : true)
+		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_images),	
 ];
 
 export const updateOneRealtyValidation = [
