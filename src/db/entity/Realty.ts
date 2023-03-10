@@ -86,14 +86,14 @@ export class Realty extends Model {
 	@Column({ length: 1000 })
 	description: string;
 
-	@Column('text')
-	primeImage: string;
+	@Column('bytea')
+	primeImage: Buffer;
 
-	@Column({
-		type: 'text',
-		array: true,
+	@Column({ 
+		type: 'bytea', 
+		array: true 
 	})
-	images: string[];
+	images: Buffer[];
 
 	@Column('text')
 	address: string;
