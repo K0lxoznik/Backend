@@ -1,3 +1,4 @@
+import cookie from 'cookie';
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
 import config from '../../config';
@@ -15,19 +16,14 @@ import { Language, RequestBody } from './../../types';
 export const getMe = async (req: Request, res: Response) => {
 	try {
 		// @ts-ignore
-		const userId = req.user.id;
-		// @ts-ignore
 		const lang = req.lang as Language;
-
 		const userRepository = AppDataSource.manager.getRepository(User);
-		const user = await userRepository.findOneBy({ id: userId });
 
+		// @ts-ignore
+		const user = await userRepository.findOneBy({ id: req.user.id });
 		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.user_deleted);
 
-		const responseData = {
-			user: removeProperty(user, 'createdAt', 'updatedAt', 'password'),
-		};
-
+		const responseData = removeProperty(user, 'createdAt', 'updatedAt', 'password');
 		send(res, CODES.OK, locales[lang].auth.found, responseData);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
@@ -38,9 +34,12 @@ export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Respons
 	try {
 		// @ts-ignore
 		const lang = req.lang as Language;
+		const userRepository = AppDataSource.manager.getRepository(User);
+		const email_user = await userRepository.findOneBy({ email: req.body.email });
+		if (email_user)
+			return send(res, CODES.BAD_REQUEST, locales[lang].middlewares.validateEmail.exists);
 
 		const code = Math.floor(Math.random() * 900000) + 100000;
-
 		await redis.set(`code:${req.body.email}`, code, 'EX', 300);
 
 		let transporter = nodemailer.createTransport({
@@ -69,14 +68,20 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 	try {
 		// @ts-ignore
 		const lang = req.lang as Language;
+		const userRepository = AppDataSource.manager.getRepository(User);
+		const email_user = await userRepository.findOneBy({ email: req.body.email });
+		if (email_user)
+			return send(res, CODES.BAD_REQUEST, locales[lang].middlewares.validateEmail.exists);
+
 		const code = req.body.code;
-		const codeFromRedis = await redis.get(`code:${req.body.email}`);
 		if (!code) return send(res, CODES.BAD_REQUEST, locales[lang].auth.code_missing);
+
+		const codeFromRedis = await redis.get(`code:${req.body.email}`);
 		if (!codeFromRedis) return send(res, CODES.BAD_REQUEST, locales[lang].auth.code_deprecated);
+
 		if (+code !== +codeFromRedis)
 			return send(res, CODES.BAD_REQUEST, locales[lang].auth.code_wrong);
 
-		const userRepository = AppDataSource.manager.getRepository(User);
 		const newUser = userRepository.manager.create(User, {
 			...req.body,
 			password: await hashPassword(req.body.password),
@@ -84,11 +89,20 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 
 		await AppDataSource.manager.save(newUser);
 
-		const responseData = {
-			token: createJWT(newUser),
-			user: removeProperty(newUser, 'createdAt', 'updatedAt', 'password'),
-		};
+		const token = createJWT(newUser);
 
+		res.setHeader(
+			'Set-Cookie',
+			cookie.serialize('token', token, {
+				httpOnly: true,
+				secure: true,
+				maxAge: 60 * 15,
+				sameSite: 'lax',
+				path: '/',
+			}),
+		);
+
+		const responseData = removeProperty(newUser, 'createdAt', 'updatedAt', 'password');
 		send(res, CODES.CREATED, locales[lang].auth.user_signed_up, responseData);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
@@ -109,12 +123,36 @@ export const signInUser = async (req: Request, res: Response) => {
 		if (!compared)
 			return send(res, CODES.BAD_REQUEST, locales[lang].auth.incorrect_email_or_pass);
 
-		const responseData = {
-			token: createJWT(firstUser, req.body.rememberMe),
-			user: removeProperty(firstUser, 'createdAt', 'updatedAt', 'password'),
-		};
+		const token = createJWT(firstUser, req.body.rememberMe);
 
+		res.setHeader(
+			'Set-Cookie',
+			cookie.serialize('token', token, {
+				httpOnly: true,
+				secure: true,
+				maxAge: req.body.rememberMe ? 60 * 60 * 24 * 20 : 60 * 15,
+				sameSite: 'lax',
+				path: '/',
+			}),
+		);
+
+		const responseData = removeProperty(firstUser, 'createdAt', 'updatedAt', 'password');
 		send(res, CODES.ACCEPTED, locales[lang].auth.user_signed_in, responseData);
+	} catch (error: any) {
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const signOutUser = async (req: Request, res: Response) => {
+	try {
+		// @ts-ignore
+		const lang = req.lang as Language;
+		const token = req.cookies.token;
+
+		redis.sadd(`expired-token:${token}`, Date.now());
+		res.clearCookie('token');
+
+		send(res, CODES.OK, locales[lang].auth.user_signed_out);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}

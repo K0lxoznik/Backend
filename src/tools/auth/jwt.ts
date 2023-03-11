@@ -11,7 +11,7 @@ import { User } from '../../db/entity/User';
 export const createJWT = (user: User, rememberMe = false) => {
 	const { id, name, secondName, bio, avatar, email, password } = user;
 	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, config.JWT_SECRET, {
-		expiresIn: rememberMe ? '20d' : '1d',
+		expiresIn: rememberMe ? '20d' : '15m',
 	});
 };
 

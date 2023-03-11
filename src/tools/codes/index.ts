@@ -9,10 +9,12 @@ import { CODES } from './types';
  * @param code CODES
  * @param message string
  * @param data any
+ * @param extra config for response
  */
-export const send = (res: Response, code: CODES, message: string, data?: any) => {
+export const send = (res: Response, code: CODES, message: string, data?: any, extra?: any) => {
 	res.status(code).json({
 		message,
 		data,
+		...extra,
 	});
 };
