@@ -14,11 +14,14 @@ export const getAllRealties = async (req: Request, res: Response) => {
 		const lang = req.lang as Language;
 		const realtyRepository = AppDataSource.getRepository(Realty);
 		const take = Number(req.query.take) || 20;
-		const skip = Number(req.query.page) || 0;
+		const page = Number(req.query.page) || 0;
+
+		const count = await realtyRepository.count();
+		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties, 0);
 
 		const realties = await realtyRepository.find({
 			take,
-			skip,
+			skip: page,
 			relations: ['images'],
 			select: {
 				images: {
@@ -27,10 +30,7 @@ export const getAllRealties = async (req: Request, res: Response) => {
 			},
 		});
 
-		if (!realties.length)
-			return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
-
-		send(res, CODES.OK, locales[lang].realties.found, realties);
+		send(res, CODES.OK, locales[lang].realties.found, realties, { count, take, page });
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
@@ -49,6 +49,7 @@ export const createUserRealty = async (req: any, res: Response) => {
 		});
 
 		const images = [];
+
 		for (const img of req.body.images) {
 			const data = await sharp(Buffer.from(img)).webp().toBuffer();
 			const image = imageRepository.create({ data, realty: { id: realty.id } });

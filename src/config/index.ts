@@ -6,4 +6,5 @@ export default {
 	REDIS_URL: String(process.env.REDIS_URL),
 	SEND_EMAIL: String(process.env.SEND_EMAIL),
 	SEND_PASSWORD: String(process.env.SEND_PASSWORD),
+	ORIGINS: [String(process.env.LOCAL_ORIGIN), String(process.env.ORIGIN)],
 };

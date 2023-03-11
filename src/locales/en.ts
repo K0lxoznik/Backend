@@ -28,6 +28,7 @@ export default {
 		code_missing: 'Missing code',
 		user_signed_up: 'Successfully registered',
 		user_signed_in: 'Successful login',
+		user_signed_out: 'Successful logout',
 		user_deleted: 'Your account has been deleted',
 		incorrect_email_or_pass: 'Incorrect email or password',
 		incorrect_data: 'Incorrect data',

@@ -1,3 +1,4 @@
+import cookie from 'cookie';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
@@ -15,11 +16,14 @@ import { CODES } from '../codes/types';
  */
 export const protect = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const bearer = req.headers.authorization;
-		if (!bearer) return send(res, CODES.BAD_REQUEST, 'No headers provided');
-
-		const token = bearer.split(' ')[1];
+		const cookies = cookie.parse(req.headers.cookie || '');
+		const token = cookies.token;
 		if (!token) return send(res, CODES.BAD_REQUEST, 'No token provided');
+
+		const cookieExpiration = new Date(req.cookies.token.expires).getTime();
+		const currentTime = new Date().getTime();
+		if (cookieExpiration < currentTime)
+			return send(res, CODES.FORBIDDEN, 'Token is deprecated');
 
 		const payload = jwt.verify(token, config.JWT_SECRET);
 		if (!payload) return send(res, CODES.UNAUTHORIZED, 'Invalid token');
@@ -40,11 +44,14 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
  */
 export const protectUserIDParam = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const bearer = req.headers.authorization;
-		if (!bearer) return send(res, CODES.BAD_REQUEST, 'Authorization укажи, еблан');
+		const cookies = cookie.parse(req.headers.cookie || '');
+		const token = cookies.token;
+		if (!token) return send(res, CODES.BAD_REQUEST, 'No token provided');
 
-		const token = bearer.split(' ')[1];
-		if (!token) return send(res, CODES.BAD_REQUEST, 'Токен укажи, еблан');
+		const cookieExpiration = new Date(req.cookies.token.expires).getTime();
+		const currentTime = new Date().getTime();
+		if (cookieExpiration < currentTime)
+			return send(res, CODES.FORBIDDEN, 'Token is deprecated');
 
 		const userRepository = AppDataSource.manager.getRepository(User);
 		const user = await userRepository.findOneBy({ id: +req.params.id });
@@ -64,11 +71,14 @@ export const protectUserIDParam = async (req: Request, res: Response, next: Next
 
 export const protectRealtyIDParam = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const bearer = req.headers.authorization;
-		if (!bearer) return send(res, CODES.BAD_REQUEST, 'Authorization укажи, еблан');
+		const cookies = cookie.parse(req.headers.cookie || '');
+		const token = cookies.token;
+		if (!token) return send(res, CODES.BAD_REQUEST, 'No token provided');
 
-		const token = bearer.split(' ')[1];
-		if (!token) return send(res, CODES.BAD_REQUEST, 'Токен укажи, еблан');
+		const cookieExpiration = new Date(req.cookies.token.expires).getTime();
+		const currentTime = new Date().getTime();
+		if (cookieExpiration < currentTime)
+			return send(res, CODES.FORBIDDEN, 'Token is deprecated');
 
 		const realtyTable = AppDataSource.getRepository(Realty);
 		const realty = await realtyTable.findOneBy({ id: +req.params.id });
@@ -80,6 +90,7 @@ export const protectRealtyIDParam = async (req: Request, res: Response, next: Ne
 			where: { realties: { id: +req.params.id } },
 			select: { id: true },
 		});
+
 		if (!owner) return send(res, CODES.NOT_FOUND, 'Хз, что-то пошло не так');
 		if (!user || +user.id !== +owner.id) return send(res, CODES.UNAUTHORIZED, 'Нахуй пошел');
 

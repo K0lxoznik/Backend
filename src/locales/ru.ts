@@ -28,6 +28,7 @@ export default {
 		code_wrong: 'Неправильный код',
 		user_signed_in: 'Успешный вход',
 		user_signed_up: 'Успешно зарегистрирован',
+		user_signed_out: 'Успешно вышли',
 		user_deleted: 'Ваш аккаунт был удален',
 		incorrect_email_or_pass: 'Неверный email или пароль',
 		incorrect_data: 'Неправильные данные',

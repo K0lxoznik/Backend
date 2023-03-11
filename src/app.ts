@@ -1,8 +1,10 @@
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import 'reflect-metadata';
+import config from './config';
 import { initializeDB } from './db/index';
 import authRouter from './routes/Auth';
 import imageRouter from './routes/Image';
@@ -15,15 +17,17 @@ const app = express();
 
 initializeDB();
 
+app.use(cors({ origin: config.ORIGINS, credentials: true }));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
-app.use(
-	cors({ origin: ['http://localhost:3000', 'https://doom-ru.vercel.app'] }),
-	express.json(),
-	morgan('dev'),
-);
+app.use(cookieParser());
+app.use(express.json());
+app.use(morgan('dev'));
+
 app.use('/api/image', imageRouter);
+
 app.use(checkLanguage);
+
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/realty', realtyRouter);
