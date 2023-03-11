@@ -39,9 +39,6 @@ export const createUserRealtyValidation = [
 		.isString()
 		.isLength({ min: 1, max: 100 })
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_address),
-	body('primeImage')
-		.isString()
-		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_primeImage),
 	body('area')
 		.isFloat({ min: 1 })
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_area),
@@ -53,8 +50,8 @@ export const createUserRealtyValidation = [
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_bathrooms),
 	body('images')
 		.isArray()
-		.custom((value) => value.length < 1 || value.length > 10 ? false : true)
-		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_images),	
+		.custom((value) => (value.length > 10 ? false : true))
+		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_images),
 ];
 
 export const updateOneRealtyValidation = [
@@ -105,10 +102,6 @@ export const updateOneRealtyValidation = [
 		.isString()
 		.isLength({ min: 1, max: 100 })
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_address),
-	body('primeImage')
-		.optional()
-		.isString()
-		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_primeImage),
 	body('area')
 		.optional()
 		.isFloat({ min: 1 })
@@ -124,6 +117,6 @@ export const updateOneRealtyValidation = [
 	body('images')
 		.optional()
 		.isArray()
-		.isLength({ min: 1, max: 10 })
+		.custom((value) => (value.length > 10 ? false : true))
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_images),
 ];

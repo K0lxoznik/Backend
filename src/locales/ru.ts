@@ -13,6 +13,13 @@ export default {
 		invalid_secondName_length: 'Фамилия не менее 2 символов',
 		invalid_secondName_type: 'Фамилия не должна содержать цифр',
 	},
+	image: {
+		found: 'Картинка найдена',
+		no_id: 'Требуется ID картинки',
+		no_image: 'Картинки с таким id не существует',
+
+		invalid_id: 'Неправильный uuid id',
+	},
 	auth: {
 		found: 'Пользователь найден',
 		code_sent: 'Код был отправлен вам на почту',
@@ -56,8 +63,7 @@ export default {
 		invalid_area: 'Площадь минимум 1 кв. м.',
 		invalid_elevator: 'Лифт да или нет',
 		invalid_bathrooms: 'Количество спален это число',
-		invalid_images: 'Фотографий от 1 до 10',
-		invalid_primeImage: 'Главная фотография это строка',
+		invalid_images: 'Картинок до 10',
 	},
 	location: {
 		no_lat_or_lon: 'Нет содержимого',

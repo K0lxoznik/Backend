@@ -1,6 +1,6 @@
-import { createConnection } from 'net';
 import { DataSource } from 'typeorm';
 import config from '../config';
+import { Image } from './entity/Image';
 import { Realty } from './entity/Realty';
 import { User } from './entity/User';
 
@@ -11,7 +11,7 @@ const AppDataSource = new DataSource({
 	port: config.DATABASE_PORT,
 	synchronize: true,
 	logging: true,
-	entities: [User, Realty],
+	entities: [User, Realty, Image],
 	subscribers: [],
 	migrations: [],
 });

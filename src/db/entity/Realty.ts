@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import Model from '../types';
+import { Image } from './Image';
 import { User } from './User';
 
 enum Action {
@@ -86,15 +87,6 @@ export class Realty extends Model {
 	@Column({ length: 1000 })
 	description: string;
 
-	@Column('bytea')
-	primeImage: Buffer;
-
-	@Column({ 
-		type: 'bytea', 
-		array: true 
-	})
-	images: Buffer[];
-
 	@Column('text')
 	address: string;
 
@@ -115,6 +107,9 @@ export class Realty extends Model {
 
 	@Column('int')
 	bedrooms: number;
+
+	@OneToMany(() => Image, (image) => image.realty)
+	images: Image[];
 
 	@ManyToOne(() => User, (user) => user.realties)
 	@JoinColumn()

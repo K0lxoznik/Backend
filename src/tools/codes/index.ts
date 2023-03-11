@@ -1,11 +1,11 @@
 import { Response } from 'express';
 import { CODES } from './types';
 
-/** ## Success Response
- * The request has succeeded. The information
- * returned with the response is dependent
- * on the method used in the request
- * @param res express:response
+/** ## Response Function
+ * The information returned with the
+ * response is dependent on the method
+ * used in the request
+ * @param res Response
  * @param code CODES
  * @param message string
  * @param data any

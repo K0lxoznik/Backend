@@ -13,6 +13,13 @@ export default {
 		invalid_secondName_length: 'Second name min 2 characters',
 		invalid_secondName_type: 'Second name should be a string',
 	},
+	image: {
+		found: 'Image found',
+		no_id: 'Image ID required',
+		no_image: "Image with this id doesn't exists",
+
+		invalid_id: 'This is not a valid uuid id',
+	},
 	auth: {
 		found: 'User found',
 		code_sent: 'Code sent',
@@ -56,8 +63,7 @@ export default {
 		invalid_area: 'Area min 1 sq. m.',
 		invalid_elevator: 'Elevator true of false',
 		invalid_bathrooms: 'Bathrooms is number',
-		invalid_images: 'Images must be from 1 to 10',
-		invalid_primeImage: 'Prime image is string',
+		invalid_images: 'Images must be max 10',
 	},
 	location: {
 		no_lat_or_lon: 'No content available',
