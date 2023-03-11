@@ -97,7 +97,6 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 				httpOnly: true,
 				secure: true,
 				maxAge: 60 * 15,
-				sameSite: 'lax',
 				path: '/',
 			}),
 		);
@@ -131,7 +130,6 @@ export const signInUser = async (req: Request, res: Response) => {
 				httpOnly: true,
 				secure: true,
 				maxAge: req.body.rememberMe ? 60 * 60 * 24 * 20 : 60 * 15,
-				sameSite: 'lax',
 				path: '/',
 			}),
 		);
