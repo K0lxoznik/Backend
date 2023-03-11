@@ -149,7 +149,6 @@ export const signOutUser = async (req: Request, res: Response) => {
 		const lang = req.lang as Language;
 		const token = req.cookies.token;
 
-		redis.sadd(`expired-token:${token}`, Date.now());
 		res.clearCookie('token');
 
 		send(res, CODES.OK, locales[lang].auth.user_signed_out);
