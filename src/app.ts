@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/image', imageRouter);
+app.use('/image', imageRouter);
 
 app.use(checkLanguage);
 
