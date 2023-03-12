@@ -94,13 +94,13 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 		res.setHeader(
 			'Set-Cookie',
 			cookie.serialize('token', token, {
-		    	httpOnly: true,
-		    	secure: true,
-		    	domain: config.DOMAIN,
-			    maxAge: 60 * 15,
-			    sameSite: 'none',
-			    path: '/',
-		  	}),
+				httpOnly: true,
+				secure: true,
+				domain: config.DOMAIN,
+				maxAge: 60 * 15,
+				sameSite: 'none',
+				path: '/',
+			}),
 		);
 
 		const responseData = removeProperty(newUser, 'createdAt', 'updatedAt', 'password');
@@ -129,13 +129,13 @@ export const signInUser = async (req: Request, res: Response) => {
 		res.setHeader(
 			'Set-Cookie',
 			cookie.serialize('token', token, {
-		    	httpOnly: true,
-		    	secure: true,
-		    	domain: config.DOMAIN,
-			    maxAge: req.body.remember ? 60 * 60 * 24 * 20 : 60 * 15,
-			    sameSite: 'none',
-			    path: '/',
-		  	}),
+				httpOnly: true,
+				secure: true,
+				domain: config.DOMAIN,
+				maxAge: req.body.remember ? 60 * 60 * 24 * 20 : 60 * 15,
+				sameSite: 'none',
+				path: '/',
+			}),
 		);
 
 		const responseData = removeProperty(firstUser, 'createdAt', 'updatedAt', 'password');
@@ -149,10 +149,7 @@ export const signOutUser = async (req: Request, res: Response) => {
 	try {
 		// @ts-ignore
 		const lang = req.lang as Language;
-		const token = req.cookies.token;
-
-		res.clearCookie('token');
-
+		res.clearCookie('token', { path: '/' });
 		send(res, CODES.OK, locales[lang].auth.user_signed_out);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
