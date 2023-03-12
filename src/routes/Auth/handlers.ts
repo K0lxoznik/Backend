@@ -94,12 +94,12 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 		res.setHeader(
 			'Set-Cookie',
 			cookie.serialize('token', token, {
-				httpOnly: true,
-				secure: true,
-				maxAge: 60 * 15,
-				sameSite: 'none',
-				path: '/',
-			}),
+		    	httpOnly: true,
+		    	secure: true,
+			    maxAge: 60 * 15,
+			    sameSite: 'strict',
+			    path: '/',
+		  	}),
 		);
 
 		const responseData = removeProperty(newUser, 'createdAt', 'updatedAt', 'password');
@@ -123,17 +123,17 @@ export const signInUser = async (req: Request, res: Response) => {
 		if (!compared)
 			return send(res, CODES.BAD_REQUEST, locales[lang].auth.incorrect_email_or_pass);
 
-		const token = createJWT(firstUser, req.body.rememberMe);
+		const token = createJWT(firstUser, req.body.remember);
 
 		res.setHeader(
 			'Set-Cookie',
 			cookie.serialize('token', token, {
-				httpOnly: true,
-				secure: true,
-				maxAge: req.body.rememberMe ? 60 * 60 * 24 * 20 : 60 * 15,
-				sameSite: 'none',
-				path: '/',
-			}),
+		    	httpOnly: true,
+		    	secure: true,
+			    maxAge: req.body.remember ? 60 * 60 * 24 * 20 : 60 * 15,
+			    sameSite: 'strict',
+			    path: '/',
+		  	}),
 		);
 
 		const responseData = removeProperty(firstUser, 'createdAt', 'updatedAt', 'password');
