@@ -4,7 +4,6 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import 'reflect-metadata';
-import config from './config';
 import { initializeDB } from './db/index';
 import authRouter from './routes/Auth';
 import imageRouter from './routes/Image';
@@ -18,10 +17,7 @@ const app = express();
 initializeDB();
 
 app.use(morgan('dev'));
-app.use(cors({ origin: [
-	`https://${config.DOMAIN}`, 
-	`http://localhost:3000`, 
-], credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(express.json());
