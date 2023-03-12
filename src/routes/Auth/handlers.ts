@@ -96,9 +96,9 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 			cookie.serialize('token', token, {
 		    	httpOnly: true,
 		    	secure: true,
-		    	domain: config.ORIGIN,
+		    	domain: config.DOMAIN,
 			    maxAge: 60 * 15,
-			    sameSite: 'strict',
+			    sameSite: 'none',
 			    path: '/',
 		  	}),
 		);
@@ -131,9 +131,9 @@ export const signInUser = async (req: Request, res: Response) => {
 			cookie.serialize('token', token, {
 		    	httpOnly: true,
 		    	secure: true,
-		    	domain: config.ORIGIN,
+		    	domain: config.DOMAIN,
 			    maxAge: req.body.remember ? 60 * 60 * 24 * 20 : 60 * 15,
-			    sameSite: 'strict',
+			    sameSite: 'none',
 			    path: '/',
 		  	}),
 		);
