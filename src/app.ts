@@ -17,20 +17,20 @@ const app = express();
 
 initializeDB();
 
+app.use(morgan('dev'));
 app.use(cors({ origin: config.ORIGINS, credentials: true }));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
-app.use(cookieParser());
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(cookieParser());
 
 app.use('/api/image', imageRouter);
 
 app.use(checkLanguage);
 
-app.use('/api/auth', authRouter);
-app.use('/api/user', userRouter);
-app.use('/api/realty', realtyRouter);
-app.use('/api/location', locationRouter);
+app.use('/auth', authRouter);
+app.use('/user', userRouter);
+app.use('/realty', realtyRouter);
+app.use('/location', locationRouter);
 
 export default app;
