@@ -18,7 +18,7 @@ const app = express();
 initializeDB();
 
 app.use(morgan('dev'));
-app.use(cors({ origin: config.ORIGINS, credentials: true }));
+app.use(cors({ origin: [config.ORIGIN, config.LOCAL_ORIGIN], credentials: true }));
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: true }));
 app.use(express.json());
