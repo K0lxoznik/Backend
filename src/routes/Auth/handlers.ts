@@ -149,7 +149,7 @@ export const signOutUser = async (req: Request, res: Response) => {
 	try {
 		// @ts-ignore
 		const lang = req.lang as Language;
-		res.clearCookie('token', { path: '/' });
+		res.clearCookie('token', { path: '/', domain: config.DOMAIN });
 		send(res, CODES.OK, locales[lang].auth.user_signed_out);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
