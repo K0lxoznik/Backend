@@ -2,18 +2,15 @@ import { Request, Response } from 'express';
 import { pipeline, Readable } from 'stream';
 import AppDataSource from '../../db';
 import { Image } from '../../db/entity/Image';
-import locales from '../../locales';
 import { send } from '../../tools/codes';
 import { CODES } from '../../tools/codes/types';
-import { Language } from '../../types';
 
 export const getOneImage = async (req: Request, res: Response) => {
 	try {
 		// @ts-ignore
-		const lang = req.lang as Language;
 		const imageRepository = AppDataSource.getRepository(Image);
 		const image = await imageRepository.findOneBy({ id: req.params.id });
-		if (!image) return send(res, CODES.NOT_FOUND, locales[lang].image.no_image);
+		if (!image) return send(res, CODES.NOT_FOUND, 'Image no found');
 
 		const readStream = new Readable();
 		readStream.push(image.data);
