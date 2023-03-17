@@ -21,7 +21,7 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		const realties = await realtyRepository.find({
 			take,
-			skip: page,
+			skip: take * (page - 1),
 			relations: ['images'],
 			select: {
 				images: {
