@@ -84,7 +84,7 @@ export class Realty extends Model {
 	@Column({ length: 100 })
 	title: string;
 
-	@Column({ length: 1000 })
+	@Column({ length: 2500 })
 	description: string;
 
 	@Column('text')
@@ -104,6 +104,9 @@ export class Realty extends Model {
 
 	@Column('boolean')
 	elevator: boolean;
+
+	@Column('boolean')
+	mortgage: boolean;
 
 	@Column('int')
 	bedrooms: number;

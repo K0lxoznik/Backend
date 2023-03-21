@@ -33,7 +33,7 @@ export const createUserRealtyValidation = [
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_title),
 	body('description')
 		.isString()
-		.isLength({ min: 1, max: 1000 })
+		.isLength({ min: 1, max: 2500 })
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_description),
 	body('address')
 		.isString()

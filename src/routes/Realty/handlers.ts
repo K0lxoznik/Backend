@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import sharp from 'sharp';
+import { Between, ILike, In } from 'typeorm';
 import AppDataSource from '../../db';
 import { Image } from '../../db/entity/Image';
 import { Realty } from '../../db/entity/Realty';
@@ -15,13 +16,47 @@ export const getAllRealties = async (req: Request, res: Response) => {
 		const realtyRepository = AppDataSource.getRepository(Realty);
 		const take = Number(req.query.take) || 20;
 		const page = Number(req.query.page) || 0;
+		const skip = take * (page - 1);
+		const {
+			address,
+			type,
+			rooms,
+			term,
+			action,
+			bedrooms,
+			price_to,
+			price_from,
+			area_from,
+			area_to,
+			floor_from,
+			floor_to,
+			repair,
+			elevator,
+			mortgage,
+			house_type,
+		} = req.query;
 
 		const count = await realtyRepository.count();
-		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties, 0);
+		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
 		const realties = await realtyRepository.find({
 			take,
-			skip: take * (page - 1),
+			where: {
+				address: ILike(`%${address || ''}%`),
+				type: type ? In([type]) : undefined,
+				rooms: rooms ? +rooms : undefined,
+				term: term ? In([term]) : undefined,
+				action: action ? In([action]) : undefined,
+				bedrooms: bedrooms ? +bedrooms : undefined,
+				price: Between(Number(price_from) || 0, Number(price_to) || Infinity),
+				floor: Between(Number(floor_from) || 0, Number(floor_to) || 100),
+				area: Between(Number(area_from) || 0, Number(area_to) || Infinity),
+				repair: repair ? In([repair]) : undefined,
+				elevator: elevator ? true : undefined,
+				mortgage: mortgage ? true : undefined,
+				houseType: house_type ? In([house_type]) : undefined,
+			},
+			skip,
 			relations: ['images'],
 			select: {
 				images: {
@@ -29,6 +64,8 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				},
 			},
 		});
+
+		if (!realties) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
 		send(res, CODES.OK, locales[lang].realties.found, realties, { count, take, page });
 	} catch (error: any) {
