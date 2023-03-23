@@ -23,7 +23,7 @@ export const getAllRealties = async (req: Request, res: Response) => {
 			rooms,
 			term,
 			action,
-			bedrooms,
+			beds,
 			price_to,
 			price_from,
 			area_from,
@@ -37,21 +37,19 @@ export const getAllRealties = async (req: Request, res: Response) => {
 			house_type,
 		} = req.query;
 
-		const count = await realtyRepository.count();
-		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
+		const totalCount = await realtyRepository.count();
 
-		const order = sort_by ? (sort_by as string).split('_') : undefined;
-		console.log(order)
+		if (!totalCount) 
+			return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
-		const realties = await realtyRepository.find({
-			take,
+		const count = await realtyRepository.count({
 			where: {
-				address: ILike(`%${address || ''}%`),
+				address: ILike(`%${address || ""}%`),
 				type: type ? In([type]) : undefined,
 				rooms: rooms ? +rooms : undefined,
 				term: term ? In([term]) : undefined,
 				action: action ? In([action]) : undefined,
-				bedrooms: bedrooms ? +bedrooms : undefined,
+				bedrooms: beds ? +beds : undefined,
 				price: Between(Number(price_from) || 0, Number(price_to) || Infinity),
 				floor: Between(Number(floor_from) || 0, Number(floor_to) || 100),
 				area: Between(Number(area_from) || 0, Number(area_to) || Infinity),
@@ -60,7 +58,31 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				mortgage: mortgage ? true : undefined,
 				houseType: house_type ? In([house_type]) : undefined,
 			},
+		});
+
+		if (!count)
+			return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
+
+		const order = sort_by ? (sort_by as string).split('_') : undefined;
+
+		const realties = await realtyRepository.find({
+			take,
 			skip,
+			where: {
+				address: ILike(`%${address || ''}%`),
+				type: type ? In([type]) : undefined,
+				rooms: rooms ? +rooms : undefined,
+				term: term ? In([term]) : undefined,
+				action: action ? In([action]) : undefined,
+				bedrooms: beds ? +beds : undefined,
+				price: Between(Number(price_from) || 0, Number(price_to) || Infinity),
+				floor: Between(Number(floor_from) || 0, Number(floor_to) || 100),
+				area: Between(Number(area_from) || 0, Number(area_to) || Infinity),
+				repair: repair ? In([repair]) : undefined,
+				elevator: elevator ? true : undefined,
+				mortgage: mortgage ? true : undefined,
+				houseType: house_type ? In([house_type]) : undefined,
+			},
 			order: {
 				price: order && order[0] === 'PRICE' ? order[1] as any : undefined,
 				createdAt: order && order[0] === 'DATE' ? order[1] as any : undefined
