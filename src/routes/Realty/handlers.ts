@@ -31,6 +31,7 @@ export const getAllRealties = async (req: Request, res: Response) => {
 			floor_from,
 			floor_to,
 			repair,
+			sort_by,
 			elevator,
 			mortgage,
 			house_type,
@@ -38,6 +39,9 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		const count = await realtyRepository.count();
 		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
+
+		const order = sort_by ? (sort_by as string).split('_') : undefined;
+		console.log(order)
 
 		const realties = await realtyRepository.find({
 			take,
@@ -57,6 +61,10 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				houseType: house_type ? In([house_type]) : undefined,
 			},
 			skip,
+			order: {
+				price: order && order[0] === 'PRICE' ? order[1] as any : undefined,
+				createdAt: order && order[0] === 'DATE' ? order[1] as any : undefined
+			},
 			relations: ['images'],
 			select: {
 				images: {
