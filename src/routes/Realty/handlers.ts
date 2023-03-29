@@ -39,12 +39,11 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		const totalCount = await realtyRepository.count();
 
-		if (!totalCount) 
-			return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
+		if (!totalCount) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
 		const count = await realtyRepository.count({
 			where: {
-				address: ILike(`%${address || ""}%`),
+				address: ILike(`%${address || ''}%`),
 				type: type ? In([type]) : undefined,
 				rooms: rooms ? +rooms : undefined,
 				term: term ? In([term]) : undefined,
@@ -60,8 +59,7 @@ export const getAllRealties = async (req: Request, res: Response) => {
 			},
 		});
 
-		if (!count)
-			return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
+		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
 		const order = sort_by ? (sort_by as string).split('_') : undefined;
 
@@ -84,8 +82,8 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				houseType: house_type ? In([house_type]) : undefined,
 			},
 			order: {
-				price: order && order[0] === 'PRICE' ? order[1] as any : undefined,
-				createdAt: order && order[0] === 'DATE' ? order[1] as any : undefined
+				price: order && order[0] === 'PRICE' ? (order[1] as any) : undefined,
+				createdAt: order && order[0] === 'DATE' ? (order[1] as any) : undefined,
 			},
 			relations: ['images'],
 			select: {
@@ -150,7 +148,15 @@ export const getOneRealty = async (req: Request, res: Response) => {
 		if (!req.params.id) return send(res, CODES.BAD_REQUEST, locales[lang].realties.no_id);
 
 		const realtyTable = AppDataSource.getRepository(Realty);
-		const realty = await realtyTable.findOneBy({ id: +req.params.id });
+		const realty = await realtyTable.find({
+			where: { id: +req.params.id },
+			relations: ['images'],
+			select: {
+				images: {
+					id: true,
+				},
+			},
+		});
 		if (!realty) return send(res, CODES.NOT_FOUND, locales[lang].realties.no_realties);
 
 		send(res, CODES.OK, locales[lang].realties.found, realty);
