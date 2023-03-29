@@ -148,7 +148,7 @@ export const getOneRealty = async (req: Request, res: Response) => {
 		if (!req.params.id) return send(res, CODES.BAD_REQUEST, locales[lang].realties.no_id);
 
 		const realtyTable = AppDataSource.getRepository(Realty);
-		const realty = await realtyTable.find({
+		const realty = await realtyTable.findOne({
 			where: { id: +req.params.id },
 			relations: ['images'],
 			select: {
