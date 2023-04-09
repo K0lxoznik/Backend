@@ -1,4 +1,4 @@
-import { Column, Entity, Generated, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import Model from '../types';
 import { Realty } from './Realty';
 
@@ -41,6 +41,12 @@ export class User extends Model {
 
 	@Column('text')
 	avatar?: string;
+
+	@Column({
+		array: true,
+		type: 'int',
+	})
+	favorites: number[];
 
 	@OneToMany(() => Realty, (realty) => realty.user)
 	realties: Realty[];

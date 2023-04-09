@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import sharp from 'sharp';
 import { Between, ILike, In } from 'typeorm';
-import AppDataSource from '../../db';
+import { AppDataSource } from '../../db';
 import { Image } from '../../db/entity/Image';
 import { Realty } from '../../db/entity/Realty';
+import { User } from '../../db/entity/User';
 import locales from '../../locales';
 import { CODES } from '../../tools/codes/types';
 import { Language } from '../../types';
@@ -85,9 +86,12 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				price: order && order[0] === 'PRICE' ? (order[1] as any) : undefined,
 				createdAt: order && order[0] === 'DATE' ? (order[1] as any) : undefined,
 			},
-			relations: ['images'],
+			relations: ['images', 'user'],
 			select: {
 				images: {
+					id: true,
+				},
+				user: {
 					id: true,
 				},
 			},
@@ -127,9 +131,12 @@ export const createUserRealty = async (req: any, res: Response) => {
 
 		const result = await realtyRepository.findOne({
 			where: { id: realty.id },
-			relations: ['images'],
+			relations: ['images', 'user'],
 			select: {
 				images: {
+					id: true,
+				},
+				user: {
 					id: true,
 				},
 			},
@@ -150,9 +157,12 @@ export const getOneRealty = async (req: Request, res: Response) => {
 		const realtyTable = AppDataSource.getRepository(Realty);
 		const realty = await realtyTable.findOne({
 			where: { id: +req.params.id },
-			relations: ['images'],
+			relations: ['images', 'user'],
 			select: {
 				images: {
+					id: true,
+				},
+				user: {
 					id: true,
 				},
 			},
@@ -222,6 +232,80 @@ export const deleteOneRealty = async (req: Request, res: Response) => {
 		await imageRepository.remove(realty.images);
 		await realtyRepository.remove(realty);
 		send(res, CODES.OK, locales[lang].realties.deleted);
+	} catch (error: any) {
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const addRealtyToFavorite = async (req: Request, res: Response) => {
+	try {
+		// @ts-ignore
+		const lang = req.lang as Language;
+		const realtyId = Number(req.params.realtyId);
+		const realtyRepository = AppDataSource.getRepository(Realty);
+		const realty = await realtyRepository.findOneBy({ id: Number(realtyId) });
+
+		if (!realty) return send(res, CODES.NOT_FOUND, locales[lang].realties.no_realty);
+
+		// @ts-ignore
+		const { id } = req.user as User;
+		const userRepository = AppDataSource.getRepository(User);
+		const user = await userRepository.findOneBy({ id });
+
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.incorrect_data);
+		if (user?.favorites.includes(realtyId)) 
+			return send(res, CODES.BAD_REQUEST, locales[lang].realties.realty_is_already_favorite);
+
+		user?.favorites.push(realtyId);
+		await userRepository.save(user);
+		send(res, CODES.OK, locales[lang].realties.added_to_favorites, user.favorites);
+	} catch (error: any) {
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const getAllFavoriteRealties = async (req: Request, res: Response) => {
+	try {
+		// @ts-ignore
+		const lang = req.lang as Language;
+		// @ts-ignore
+		const { id } = req.user as User;
+		const userRepository = AppDataSource.getRepository(User);
+		const user = await userRepository.findOneBy({ id });
+
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.incorrect_data);
+		if (!user.favorites.length) return send(res, CODES.OK, locales[lang].realties.no_favorites);
+
+		const realtyRepository = AppDataSource.getRepository(Realty);
+		const favoriteRealties = user.favorites.map(async (id) => {
+			return await realtyRepository.findOneBy({ id: Number(id) });
+		});
+
+		if (!favoriteRealties.length)
+			return send(res, CODES.OK, locales[lang].realties.no_favorites);
+
+		send(res, CODES.OK, locales[lang].realties.found_favorites, favoriteRealties);
+	} catch (error: any) {
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const removeRealtyFromFavorite = async (req: Request, res: Response) => {
+	try {
+		// @ts-ignore
+		const lang = req.lang as Language;
+		// @ts-ignore
+		const { id } = req.user as User;
+		const userRepository = AppDataSource.getRepository(User);
+		const user = await userRepository.findOneBy({ id });
+
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.incorrect_data);
+		if (!user.favorites.length) return send(res, CODES.OK, locales[lang].realties.no_favorites);
+
+		const { realtyId } = req.params;
+		user.favorites = user.favorites.filter((id) => id !== Number(realtyId));
+		await userRepository.save(user);
+		send(res, CODES.OK, locales[lang].realties.removed_from_favorites, user.favorites);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}

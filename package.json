@@ -7,6 +7,7 @@
 		"dev": "cross-env NODE_ENV=development nodemon dist/index.js",
 		"start": "cross-env NODE_ENV=production node dist/index.js",
 		"build": "tsc -p tsconfig.json",
+		"migration:up": "npx typeorm migration:run -d typeormconfig.js",
 		"typeorm:cli": "ts-node ./node_modules/typeorm/cli -f ./src/db/index.ts"
 	},
 	"repository": "https://github.com/K0lxoznik/Backend",

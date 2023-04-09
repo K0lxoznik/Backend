@@ -4,7 +4,7 @@ import { Image } from './entity/Image';
 import { Realty } from './entity/Realty';
 import { User } from './entity/User';
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
 	ssl: true,
 	type: 'postgres',
 	url: config.DATABASE_URL,
@@ -12,8 +12,8 @@ const AppDataSource = new DataSource({
 	synchronize: true,
 	logging: true,
 	entities: [User, Realty, Image],
-	subscribers: [],
 	migrations: [],
+	subscribers: [],
 });
 
 export const initializeDB = () => {
@@ -21,5 +21,3 @@ export const initializeDB = () => {
 		.then(() => console.log('Database initialized'))
 		.catch((error: any) => console.log(error));
 };
-
-export default AppDataSource;

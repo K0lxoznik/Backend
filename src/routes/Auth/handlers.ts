@@ -2,7 +2,7 @@ import cookie from 'cookie';
 import { Request, Response } from 'express';
 import nodemailer from 'nodemailer';
 import config from '../../config';
-import AppDataSource from '../../db';
+import { AppDataSource } from '../../db';
 import { User } from '../../db/entity/User';
 import redis from '../../db/redis';
 import locales from '../../locales';

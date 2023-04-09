@@ -116,5 +116,5 @@ export class Realty extends Model {
 
 	@ManyToOne(() => User, (user) => user.realties)
 	@JoinColumn()
-	user: string;
+	user: User;
 }

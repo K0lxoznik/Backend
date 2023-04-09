@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import AppDataSource from '../../db';
+import { AppDataSource } from '../../db';
 import { User } from '../../db/entity/User';
 import locales from '../../locales';
 import { send } from '../../tools/codes';

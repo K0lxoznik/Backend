@@ -49,6 +49,11 @@ export default {
 		no_realties: 'No realties found',
 		no_realty: 'Realty with such ID does not exist',
 		no_id: 'Realty ID required',
+		added_to_favorites: 'Realty added to favorites',
+		no_favorites: 'No favorites found',
+		removed_from_favorites: 'Realty removed from favorites',
+		found_favorites: 'Favorites found',
+		realty_is_already_favorite: 'Realty with this id is already exists in favorites',
 
 		invalid_action: 'Action must be rent or buy',
 		invalid_type: 'Type must be apartment, room, studio, cottage, hostel or house',

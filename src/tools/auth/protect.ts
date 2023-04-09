@@ -2,7 +2,7 @@ import cookie from 'cookie';
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
-import AppDataSource from '../../db';
+import { AppDataSource } from '../../db';
 import { Realty } from '../../db/entity/Realty';
 import { User } from '../../db/entity/User';
 import { send } from '../codes';

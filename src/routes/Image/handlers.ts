@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { pipeline, Readable } from 'stream';
-import AppDataSource from '../../db';
+import { AppDataSource } from '../../db';
 import { Image } from '../../db/entity/Image';
 import { send } from '../../tools/codes';
 import { CODES } from '../../tools/codes/types';
