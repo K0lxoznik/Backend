@@ -32,6 +32,7 @@ export default {
 		user_deleted: 'Your account has been deleted',
 		incorrect_email_or_pass: 'Incorrect email or password',
 		incorrect_data: 'Incorrect data',
+		phone_added: 'Phone was added',
 
 		invalid_email: 'Email is invalid',
 		invalid_password: 'Password min 8 characters',

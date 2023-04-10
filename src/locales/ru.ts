@@ -32,6 +32,7 @@ export default {
 		user_deleted: 'Ваш аккаунт был удален',
 		incorrect_email_or_pass: 'Неверный email или пароль',
 		incorrect_data: 'Неправильные данные',
+		phone_added: 'Телефон добавлен',
 
 		invalid_email: 'Неправильная почта',
 		invalid_password: 'Пароль не менее 8 символов',

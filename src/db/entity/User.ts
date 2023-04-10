@@ -40,6 +40,9 @@ export class User extends Model {
 	city?: string;
 
 	@Column('text')
+	phone: string;
+
+	@Column('text')
 	avatar?: string;
 
 	@Column({
