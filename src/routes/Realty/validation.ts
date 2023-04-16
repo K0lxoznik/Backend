@@ -45,9 +45,6 @@ export const createUserRealtyValidation = [
 	body('elevator')
 		.isBoolean()
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_elevator),
-	body('bathrooms')
-		.isInt()
-		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_bathrooms),
 	body('images')
 		.isArray()
 		.custom((value) => (value.length > 10 ? false : true))
@@ -110,10 +107,6 @@ export const updateOneRealtyValidation = [
 		.optional()
 		.isBoolean()
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_elevator),
-	body('bathrooms')
-		.optional()
-		.isInt()
-		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_bathrooms),
 	body('images')
 		.optional()
 		.isArray()
