@@ -20,6 +20,7 @@ enum Type {
 enum Term {
 	day = 'day',
 	month = 'month',
+	forever = 'forever',
 }
 
 enum Currency {

@@ -58,7 +58,7 @@ export default {
 
 		invalid_action: 'Action must be rent or buy',
 		invalid_type: 'Type must be apartment, room, studio, cottage, hostel or house',
-		invalid_term: 'Term must be day or month',
+		invalid_term: 'Term must be day, month or forever',
 		invalid_currency: 'Currency must be USD or RUB',
 		invalid_houseType: 'House type must be brick, panel, monolith, wood or other',
 		invalid_repair: 'Repair must be design, euro, cosmetic or without',

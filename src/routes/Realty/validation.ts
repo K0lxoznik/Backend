@@ -10,7 +10,7 @@ export const createUserRealtyValidation = [
 		.matches(/^(apartment|room|studio|cottage|hostel|house)$/)
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_type),
 	body('term')
-		.matches(/^(day|month)$/)
+		.matches(/^(day|month|forever)$/)
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_term),
 	body('currency')
 		.matches(/^(RUB|USD)$/)
@@ -62,7 +62,7 @@ export const updateOneRealtyValidation = [
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_type),
 	body('term')
 		.optional()
-		.matches(/^(day|month)$/)
+		.matches(/^(day|month|forever)$/)
 		.withMessage((_, { req }) => locales[req.lang as Language].realties.invalid_term),
 	body('currency')
 		.optional()
