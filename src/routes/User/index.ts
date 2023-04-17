@@ -7,7 +7,7 @@ import { deleteOneUser, getAllUsers, getOneUser, updateOneUser } from './handler
 const router = Router();
 
 router.get('/', protect, getAllUsers);
-router.get('/:id([0-9]+)', protect, getOneUser);
+router.get('/:id([0-9]+)', getOneUser);
 router.delete('/:id([0-9]+)', protectUserIDParam, deleteOneUser);
 router.put(
 	'/:id([0-9]+)',
