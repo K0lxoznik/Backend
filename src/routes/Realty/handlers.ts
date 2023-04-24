@@ -62,8 +62,6 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
-		const order = sort_by ? (sort_by as string).split('_') : undefined;
-
 		const realties = await realtyRepository.find({
 			take,
 			skip,
@@ -82,10 +80,6 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				mortgage: mortgage ? true : undefined,
 				houseType: house_type ? In([house_type]) : undefined,
 			},
-			order: {
-				price: order && order[0] === 'PRICE' ? (order[1] as any) : undefined,
-				createdAt: order && order[0] === 'DATE' ? (order[1] as any) : undefined,
-			},
 			relations: ['images', 'user'],
 			select: {
 				images: {
@@ -99,7 +93,36 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		if (!realties) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
-		send(res, CODES.OK, locales[lang].realties.found, realties, { count, take, page });
+		const order = sort_by ? (sort_by as string).split('_') : undefined;
+
+		if (!order)
+			return send(res, CODES.OK, locales[lang].realties.found, realties, {
+				count,
+				take,
+				page,
+			});
+
+		let sortedResult;
+
+		if (order[0] === 'PRICE') {
+			sortedResult = realties.sort((a, b) => {
+				const formattedPriceA = a.currency === 'USD' ? a.price * 80 : a.price;
+				const formattedPriceB = b.currency === 'USD' ? b.price * 80 : b.price;
+				return order[1] === 'ASC'
+					? formattedPriceA - formattedPriceB
+					: formattedPriceB - formattedPriceA;
+			});
+		} else if (order[0] === 'DATE') {
+			sortedResult = realties.sort((a, b) => {
+				const createdAtA = new Date(a.createdAt).getTime();
+				const createdAtB = new Date(b.createdAt).getTime();
+				return order[1] === 'ASC' ? createdAtA - createdAtB : createdAtB - createdAtA;
+			});
+		} else {
+			sortedResult = realties;
+		}
+
+		send(res, CODES.OK, locales[lang].realties.found, sortedResult, { count, take, page });
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
@@ -253,7 +276,7 @@ export const addRealtyToFavorite = async (req: Request, res: Response) => {
 		const user = await userRepository.findOneBy({ id });
 
 		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.incorrect_data);
-		if (user?.favorites.includes(realtyId)) 
+		if (user?.favorites.includes(realtyId))
 			return send(res, CODES.BAD_REQUEST, locales[lang].realties.realty_is_already_favorite);
 
 		user?.favorites.push(realtyId);
