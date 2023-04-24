@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import sharp from 'sharp';
-import { Between, ILike, In } from 'typeorm';
+import { Between, FindOptionsOrderValue, ILike, In } from 'typeorm';
 import { AppDataSource } from '../../db';
 import { Image } from '../../db/entity/Image';
 import { Realty } from '../../db/entity/Realty';
@@ -62,6 +62,8 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		if (!count) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
+		const order = sort_by ? (sort_by as string).split('_') : undefined;
+
 		const realties = await realtyRepository.find({
 			take,
 			skip,
@@ -80,6 +82,10 @@ export const getAllRealties = async (req: Request, res: Response) => {
 				mortgage: mortgage ? true : undefined,
 				houseType: house_type ? In([house_type]) : undefined,
 			},
+			order: {
+				createdAt:
+					order && order[0] === 'DATE' ? (order[1] as FindOptionsOrderValue) : undefined,
+			},
 			relations: ['images', 'user'],
 			select: {
 				images: {
@@ -93,36 +99,39 @@ export const getAllRealties = async (req: Request, res: Response) => {
 
 		if (!realties) return send(res, CODES.NO_CONTENT, locales[lang].realties.no_realties);
 
-		const order = sort_by ? (sort_by as string).split('_') : undefined;
-
-		if (!order)
+		if (!order || order[0] !== 'PRICE')
 			return send(res, CODES.OK, locales[lang].realties.found, realties, {
 				count,
 				take,
 				page,
 			});
 
-		let sortedResult;
+		const response = await fetch(
+			`${process.env.EXCHANGE_API_URL}/latest?symbols=RUB&base=USD`,
+			{
+				method: 'GET',
+				headers: {
+					apikey: String(process.env.EXCHANGE_API_KEY),
+				},
+			},
+		);
 
-		if (order[0] === 'PRICE') {
-			sortedResult = realties.sort((a, b) => {
-				const formattedPriceA = a.currency === 'USD' ? a.price * 80 : a.price;
-				const formattedPriceB = b.currency === 'USD' ? b.price * 80 : b.price;
-				return order[1] === 'ASC'
-					? formattedPriceA - formattedPriceB
-					: formattedPriceB - formattedPriceA;
-			});
-		} else if (order[0] === 'DATE') {
-			sortedResult = realties.sort((a, b) => {
-				const createdAtA = new Date(a.createdAt).getTime();
-				const createdAtB = new Date(b.createdAt).getTime();
-				return order[1] === 'ASC' ? createdAtA - createdAtB : createdAtB - createdAtA;
-			});
-		} else {
-			sortedResult = realties;
-		}
+		const data = await response.json();
 
-		send(res, CODES.OK, locales[lang].realties.found, sortedResult, { count, take, page });
+		const sortedByPriceResult = realties.sort((a, b) => {
+			const formattedPriceA = a.currency === 'USD' ? a.price * data.rates.RUB : a.price;
+			const formattedPriceB = b.currency === 'USD' ? b.price * data.rates.RUB : b.price;
+
+			return order[1] === 'ASC'
+				? formattedPriceA - formattedPriceB
+				: formattedPriceB - formattedPriceA;
+		});
+
+		send(res, CODES.OK, locales[lang].realties.found, sortedByPriceResult, {
+			count,
+			take,
+			page,
+		});
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
