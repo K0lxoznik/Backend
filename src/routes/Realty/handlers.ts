@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import fetch from 'node-fetch';
 import sharp from 'sharp';
 import { Between, FindOptionsOrderValue, ILike, In } from 'typeorm';
 import { AppDataSource } from '../../db';
@@ -116,7 +117,7 @@ export const getAllRealties = async (req: Request, res: Response) => {
 			},
 		);
 
-		const data = await response.json();
+		const data: any = await response.json();
 
 		const sortedByPriceResult = realties.sort((a, b) => {
 			const formattedPriceA = a.currency === 'USD' ? a.price * data.rates.RUB : a.price;
