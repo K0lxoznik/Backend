@@ -310,8 +310,16 @@ export const getAllFavoriteRealties = async (req: Request, res: Response) => {
 		if (!user.favorites.length) return send(res, CODES.OK, locales[lang].realties.no_favorites);
 
 		const realtyRepository = AppDataSource.getRepository(Realty);
-		const favoriteRealties = await realtyRepository.findBy({
-			id: In(user.favorites.map(Number)),
+		const favoriteRealties = await realtyRepository.find({
+			where: {
+				id: In(user.favorites.map(Number)),
+			},
+			relations: ['images'],
+			select: {
+				images: {
+					id: true,
+				},
+			},
 		});
 
 		if (!favoriteRealties.length)
