@@ -6,8 +6,9 @@ import {
 	addRealtyToFavorite,
 	createUserRealty,
 	deleteOneRealty,
-	getAllFavoriteRealties,
 	getAllRealties,
+	getFavoriteRealties,
+	getMyRealties,
 	getOneRealty,
 	removeRealtyFromFavorite,
 	updateOneRealty,
@@ -18,7 +19,8 @@ const router = Router();
 
 router.get('/', getAllRealties);
 router.post('/favorite/:realtyId([0-9]+)', protect, addRealtyToFavorite);
-router.get('/favorite', protect, getAllFavoriteRealties);
+router.get('/favorite', protect, getFavoriteRealties);
+router.get('/me', protect, getMyRealties);
 router.delete('/favorite/:realtyId([0-9]+)', protect, removeRealtyFromFavorite);
 router.post('/', protect, createUserRealtyValidation, checkValidation, createUserRealty);
 router.get('/:id([0-9]+)', getOneRealty);

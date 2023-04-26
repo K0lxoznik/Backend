@@ -297,7 +297,7 @@ export const addRealtyToFavorite = async (req: Request, res: Response) => {
 	}
 };
 
-export const getAllFavoriteRealties = async (req: Request, res: Response) => {
+export const getFavoriteRealties = async (req: Request, res: Response) => {
 	try {
 		// @ts-ignore
 		const lang = req.lang as Language;
@@ -307,25 +307,80 @@ export const getAllFavoriteRealties = async (req: Request, res: Response) => {
 		const user = await userRepository.findOneBy({ id });
 
 		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.incorrect_data);
-		if (!user.favorites.length) return send(res, CODES.OK, locales[lang].realties.no_favorites);
+
+		if (!user.favorites.length)
+			return send(res, CODES.OK, locales[lang].realties.no_favorites, []);
 
 		const realtyRepository = AppDataSource.getRepository(Realty);
+
 		const favoriteRealties = await realtyRepository.find({
 			where: {
 				id: In(user.favorites.map(Number)),
 			},
-			relations: ['images'],
+			relations: ['images', 'user'],
 			select: {
 				images: {
+					id: true,
+				},
+				user: {
 					id: true,
 				},
 			},
 		});
 
 		if (!favoriteRealties.length)
-			return send(res, CODES.OK, locales[lang].realties.no_favorites);
+			return send(res, CODES.BAD_REQUEST, locales[lang].realties.deleted, []);
 
 		send(res, CODES.OK, locales[lang].realties.found_favorites, favoriteRealties);
+	} catch (error: any) {
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const getMyRealties = async (req: Request, res: Response) => {
+	try {
+		// @ts-ignore
+		const lang = req.lang as Language;
+		// @ts-ignore
+		const { id } = req.user as User;
+		const userRepository = AppDataSource.getRepository(User);
+		const user = await userRepository.findOne({
+			where: { id },
+			relations: ['realties'],
+			select: {
+				realties: {
+					id: true,
+				},
+			},
+		});
+
+		if (!user) return send(res, CODES.NOT_FOUND, locales[lang].auth.incorrect_data);
+
+		if (!user.realties.length)
+			return send(res, CODES.OK, locales[lang].realties.no_realties, []);
+
+		const realtyRepository = AppDataSource.getRepository(Realty);
+		const myRealties = await realtyRepository.find({
+			where: {
+				user: {
+					id,
+				},
+			},
+			relations: ['images', 'user'],
+			select: {
+				images: {
+					id: true,
+				},
+				user: {
+					id: true,
+				},
+			},
+		});
+
+		if (!myRealties.length)
+			return send(res, CODES.BAD_REQUEST, locales[lang].realties.deleted, []);
+
+		send(res, CODES.OK, locales[lang].realties.found, myRealties);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}
