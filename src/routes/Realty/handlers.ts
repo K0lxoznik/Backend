@@ -254,8 +254,16 @@ export const updateRealtyViews = async (req: Request, res: Response) => {
 
 		const realtyRepository = AppDataSource.getRepository(Realty);
 
-		const realty = await realtyRepository.findOneBy({
-			id: +req.params.id,
+		const realty = await realtyRepository.findOne({
+			where: {
+				id: +req.params.id,
+			},
+			relations: ['user'],
+			select: {
+				user: {
+					id: true,
+				},
+			},
 		});
 
 		if (!realty) return send(res, CODES.NOT_FOUND, locales[lang].realties.no_realty);
