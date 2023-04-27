@@ -47,6 +47,8 @@ export default {
 		changed: 'Real estate changed',
 		created: 'Real estate created',
 		deleted: 'Real estate deleted',
+		updated: 'Views updated',
+		cannot_update: 'Cannot update views',
 		no_realties: 'No realties found',
 		no_realty: 'Realty with such ID does not exist',
 		no_id: 'Realty ID required',

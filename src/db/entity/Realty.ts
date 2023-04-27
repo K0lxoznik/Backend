@@ -100,6 +100,12 @@ export class Realty extends Model {
 	@Column('double precision')
 	area: number;
 
+	@Column({
+		type: 'int',
+		default: 1,
+	})
+	views: number;
+
 	@Column('int')
 	floor: number;
 

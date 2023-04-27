@@ -200,6 +200,7 @@ export const getOneRealty = async (req: Request, res: Response) => {
 				},
 			},
 		});
+
 		if (!realty) return send(res, CODES.NOT_FOUND, locales[lang].realties.no_realties);
 
 		send(res, CODES.OK, locales[lang].realties.found, realty);
@@ -240,6 +241,33 @@ export const updateOneRealty = async (req: Request, res: Response) => {
 
 		await realtyRepository.save(realty);
 		send(res, CODES.OK, locales[lang].realties.changed, realty);
+	} catch (error: any) {
+		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
+	}
+};
+
+export const updateRealtyViews = async (req: Request, res: Response) => {
+	try {
+		// @ts-ignore
+		const lang = req.lang as Language;
+		if (!req.params.id) return send(res, CODES.BAD_REQUEST, locales[lang].realties.no_id);
+
+		const realtyRepository = AppDataSource.getRepository(Realty);
+
+		const realty = await realtyRepository.findOneBy({
+			id: +req.params.id,
+		});
+
+		if (!realty) return send(res, CODES.NOT_FOUND, locales[lang].realties.no_realty);
+
+		// @ts-ignore
+		if (realty.user.id === req.user.id)
+			return send(res, CODES.FORBIDDEN, locales[lang].realties.cannot_update);
+
+		realty.views += 1;
+		realtyRepository.save(realty);
+
+		send(res, CODES.OK, locales[lang].realties.updated, realty.views);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
 	}

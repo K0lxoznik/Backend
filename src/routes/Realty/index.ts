@@ -12,12 +12,14 @@ import {
 	getOneRealty,
 	removeRealtyFromFavorite,
 	updateOneRealty,
+	updateRealtyViews,
 } from './handlers';
 import { createUserRealtyValidation, updateOneRealtyValidation } from './validation';
 
 const router = Router();
 
 router.get('/', getAllRealties);
+router.post('/view/:id([0-9]+)', protect, updateRealtyViews);
 router.post('/favorite/:realtyId([0-9]+)', protect, addRealtyToFavorite);
 router.get('/favorite', protect, getFavoriteRealties);
 router.get('/me', protect, getMyRealties);
