@@ -8,6 +8,7 @@ import { Realty } from '../../db/entity/Realty';
 import { User } from '../../db/entity/User';
 import locales from '../../locales';
 import { CODES } from '../../tools/codes/types';
+import { removeProperty } from '../../tools/removeProperty';
 import { Language } from '../../types';
 import { send } from './../../tools/codes/index';
 
@@ -233,13 +234,16 @@ export const updateOneRealty = async (req: Request, res: Response) => {
 			images.push(image);
 		}
 
+		await imageRepository.remove(realty.images);
 		const savedImages = await imageRepository.save(images);
+
 		realtyRepository.merge(realty, {
-			...req.body,
-			images: realty.images.concat(savedImages),
+			...removeProperty(req.body, 'images'),
+			images: savedImages,
 		});
 
 		await realtyRepository.save(realty);
+
 		send(res, CODES.OK, locales[lang].realties.changed, realty);
 	} catch (error: any) {
 		send(res, CODES.INTERNAL_SERVER_ERROR, error.message);
