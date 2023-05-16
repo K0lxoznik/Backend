@@ -43,7 +43,10 @@ export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Respons
 		await redis.set(`code:${req.body.email}`, code, 'EX', 300);
 
 		let transporter = nodemailer.createTransport({
-			service: 'gmail',
+			service: 'yandex',
+			host: 'smtp.yandex.ru',
+			port: 465,
+			secure: true,
 			auth: {
 				user: config.SEND_EMAIL,
 				pass: config.SEND_PASSWORD,
@@ -51,7 +54,7 @@ export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Respons
 		});
 
 		await transporter.sendMail({
-			from: 'vladpolisuk159@gmail.com',
+			from: config.SEND_EMAIL,
 			to: req.body.email,
 			subject: 'DOOM.RU | Verify email',
 			text: `Your code: ${code}`,
