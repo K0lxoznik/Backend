@@ -55,11 +55,11 @@ export const protectUserIDParam = async (req: Request, res: Response, next: Next
 
 		const userRepository = AppDataSource.manager.getRepository(User);
 		const user = await userRepository.findOneBy({ id: +req.params.id });
-		if (!user) return send(res, CODES.UNAUTHORIZED, 'Нахуй пошел');
+		if (!user) return send(res, CODES.UNAUTHORIZED, 'Invalid token');
 
 		const payload: any = jwt.verify(token, config.JWT_SECRET);
 		if (!payload || +payload.id !== user.id)
-			return send(res, CODES.UNAUTHORIZED, 'Нахуй пошел');
+			return send(res, CODES.UNAUTHORIZED, 'Invalid token');
 
 		// @ts-ignore
 		req.user = { id: +payload.id };
@@ -92,7 +92,7 @@ export const protectRealtyIDParam = async (req: Request, res: Response, next: Ne
 		});
 
 		if (!owner) return send(res, CODES.NOT_FOUND, 'Хз, что-то пошло не так');
-		if (!user || +user.id !== +owner.id) return send(res, CODES.UNAUTHORIZED, 'Нахуй пошел');
+		if (!user || +user.id !== +owner.id) return send(res, CODES.UNAUTHORIZED, 'Invalid token');
 
 		// @ts-ignore
 		req.user = { id: +user.id };

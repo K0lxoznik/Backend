@@ -19,7 +19,7 @@ export class Image {
 
 	@ManyToOne(() => Realty, (realty) => realty.images)
 	@JoinColumn()
-	realty: Realty;
+	realty?: Realty;
 
 	@CreateDateColumn()
 	createdAt: Date;

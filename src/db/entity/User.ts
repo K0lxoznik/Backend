@@ -42,6 +42,12 @@ export class User extends Model {
 	@Column('text')
 	phone: string;
 
+	@Column({
+		type: 'boolean',
+		default: false,
+	})
+	isActivated: boolean;
+
 	@Column('text')
 	avatar?: string;
 

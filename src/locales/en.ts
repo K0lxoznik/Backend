@@ -1,14 +1,21 @@
 export default {
 	user: {
 		found: 'User found',
-		changed: 'User changed',
+		changed: 'Data has been changed',
 		deleted: 'User deleted',
 		no_id: 'User ID required',
+		verified: 'Successfully verified',
 		no_user: 'User with such ID does not exist',
 		no_users: 'No users',
 
 		invalid_email: 'Email is invalid',
+		taken_email: 'This email is taken',
 		invalid_name_length: 'Name min 2 characters',
+		invalid_phone: 'Phone number is invalid',
+		missing_code: 'Verify code is required',
+		sent_code: 'Code sent into your email',
+		deprecated_code: 'Verify code is deprecated',
+		invalid_code: 'Invalid verify code',
 		invalid_name_type: 'Name must be a string',
 		invalid_secondName_length: 'Second name min 2 characters',
 		invalid_secondName_type: 'Second name should be a string',

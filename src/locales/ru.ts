@@ -1,14 +1,21 @@
 export default {
 	user: {
 		found: 'Пользователь найден',
-		changed: 'Пользователь изменен',
+		changed: 'Данные были изменены',
 		deleted: 'Пользователь удален',
+		verified: 'Успешная верификация',
 		no_id: 'Требуется ID пользователя',
 		no_user: 'Пользователь с таким ID не существует',
 		no_users: 'Пользователей нет',
 
 		invalid_email: 'Неправильная почта',
+		taken_email: 'Эта почта уже занята',
 		invalid_name_length: 'Имя не менее 2 символов',
+		invalid_phone: 'Неверный номер телефона',
+		missing_code: 'Код подтверждения обязателен',
+		deprecated_code: 'Устаревший код подтверждения',
+		sent_code: 'Код отправлен на почту',
+		invalid_code: 'Неверный код подтверждения',
 		invalid_name_type: 'Имя не должно содержать цифр',
 		invalid_secondName_length: 'Фамилия не менее 2 символов',
 		invalid_secondName_type: 'Фамилия не должна содержать цифр',

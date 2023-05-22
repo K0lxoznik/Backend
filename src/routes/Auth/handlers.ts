@@ -1,12 +1,12 @@
 import cookie from 'cookie';
 import { Request, Response } from 'express';
-import nodemailer from 'nodemailer';
 import config from '../../config';
 import { AppDataSource } from '../../db';
 import { User } from '../../db/entity/User';
 import redis from '../../db/redis';
 import locales from '../../locales';
 import { comparePassword, createJWT, hashPassword } from '../../tools/auth/jwt';
+import sendCode from '../../tools/auth/sendCode';
 import { CODES } from '../../tools/codes/types';
 import { removeProperty } from '../../tools/removeProperty';
 import { CreateUser, CreateUserWithCode } from './../../db/entity/User';
@@ -41,25 +41,7 @@ export const sendCodeToEmail = async (req: RequestBody<CreateUser>, res: Respons
 
 		const code = Math.floor(Math.random() * 900000) + 100000;
 		await redis.set(`code:${req.body.email}`, code, 'EX', 300);
-
-		let transporter = nodemailer.createTransport({
-			service: 'yandex',
-			host: 'smtp.yandex.ru',
-			port: 465,
-			secure: true,
-			auth: {
-				user: config.SEND_EMAIL,
-				pass: config.SEND_PASSWORD,
-			},
-		});
-
-		await transporter.sendMail({
-			from: config.SEND_EMAIL,
-			to: req.body.email,
-			subject: 'DOOM.RU | Verify email',
-			text: `Your code: ${code}`,
-			html: `<h1>Your code: ${code}</h1>`,
-		});
+		await sendCode(req.body.email, code);
 
 		send(res, CODES.CREATED, locales[lang].auth.code_sent);
 	} catch (error: any) {
@@ -87,6 +69,7 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 
 		const newUser = userRepository.manager.create(User, {
 			...req.body,
+			isActivated: true,
 			password: await hashPassword(req.body.password),
 		});
 
@@ -100,7 +83,7 @@ export const signUpUser = async (req: RequestBody<CreateUserWithCode>, res: Resp
 				httpOnly: true,
 				secure: true,
 				domain: config.DOMAIN,
-				maxAge: 60 * 15,
+				maxAge: 60 * 60 * 24 * 20,
 				sameSite: 'none',
 				path: '/',
 			}),

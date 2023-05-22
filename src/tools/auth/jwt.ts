@@ -9,10 +9,26 @@ import { User } from '../../db/entity/User';
  * @returns jwt token
  */
 export const createJWT = (user: User, rememberMe = false) => {
-	const { id, name, secondName, bio, avatar, email, password } = user;
-	return jwt.sign({ id, name, secondName, bio, avatar, email, password }, config.JWT_SECRET, {
-		expiresIn: rememberMe ? '20d' : '15m',
-	});
+	const { id, name, secondName, phone, city, bio, avatar, email, password, isActivated } = user;
+
+	return jwt.sign(
+		{
+			id,
+			name,
+			secondName,
+			bio,
+			avatar,
+			city,
+			email,
+			password,
+			phone,
+			isActivated,
+		},
+		config.JWT_SECRET,
+		{
+			expiresIn: rememberMe ? '30d' : '7d',
+		},
+	);
 };
 
 /** ## Hash Password
