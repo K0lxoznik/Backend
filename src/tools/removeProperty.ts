@@ -4,14 +4,12 @@
  * @param property removable property
  * @returns new object without `property`
  */
-export const removeProperty = <T>(object: T, ...property: string[]) => {
-	const result: any = {};
+export const removeProperty = <T, K extends keyof T>(object: T, ...properties: K[]): Omit<T, K> => {
+	const result: Partial<T> = { ...object };
 
-	for (const key in object) {
-		if (!property.includes(key)) {
-			result[key] = object[key];
-		}
-	}
+	properties.forEach((property) => {
+		delete result[property];
+	});
 
-	return result;
+	return result as Omit<T, K>;
 };
