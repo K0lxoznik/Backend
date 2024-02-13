@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import fetch from 'node-fetch';
 import sharp from 'sharp';
 import { Between, FindOptionsOrderValue, ILike, In } from 'typeorm';
 import { AppDataSource } from '../../db';
@@ -146,7 +145,7 @@ export const createUserRealty = async (req: any, res: Response) => {
 		const realtyRepository = AppDataSource.getRepository(Realty);
 		const imageRepository = AppDataSource.getRepository(Image);
 
-		const realty = realtyRepository.manager.create<Realty>(Realty, {
+		const realty = realtyRepository.manager.create<Realty, any>(Realty, {
 			...req.body,
 			user: { id: req.user.id },
 		});
