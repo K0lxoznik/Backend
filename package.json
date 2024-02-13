@@ -2,6 +2,17 @@
 	"name": "Backend",
 	"version": "1.0.0",
 	"main": "index.js",
+	"packageManager": "yarn@4.1.0",
+	"os": [
+		"linux",
+		"darwin",
+		"win32"
+	],
+	"cpu": [
+		"x64",
+		"ia32",
+		"arm64"
+	],
 	"scripts": {
 		"ts": "tsc -w",
 		"dev": "cross-env NODE_ENV=development nodemon dist/index.js",
