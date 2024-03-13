@@ -79,7 +79,7 @@ export const updateOneUser = async (req: Request, res: Response) => {
 			const data = await sharp(Buffer.from(req.body.avatar)).webp().toBuffer();
 			const image = imageRepository.create({ data });
 			const savedImage = await imageRepository.save(image);
-			userAvatar = `https://api.doom-ru.vercel.app/image/${savedImage.id}`;
+			userAvatar = `https://doom-ru-server.onrender.com/image/${savedImage.id}`;
 		}
 
 		let userIsActivated = user.isActivated;
