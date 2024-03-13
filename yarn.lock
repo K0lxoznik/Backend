@@ -679,6 +679,7 @@ __metadata:
     ioredis: "npm:^5.3.2"
     jsonwebtoken: "npm:^9.0.2"
     morgan: "npm:^1.10.0"
+    node-addon-api: "npm:^8.0.0"
     node-gyp: "npm:^10.0.1"
     nodemailer: "npm:^6.9.12"
     nodemon: "npm:^3.1.0"
@@ -2555,6 +2556,15 @@ __metadata:
   dependencies:
     node-gyp: "npm:latest"
   checksum: 10c0/0eb269786124ba6fad9df8007a149e03c199b3e5a3038125dfb3e747c2d5113d406a4e33f4de1ea600aa2339be1f137d55eba1a73ee34e5fff06c52a5c296d1d
+  languageName: node
+  linkType: hard
+
+"node-addon-api@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "node-addon-api@npm:8.0.0"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10c0/20eb231362cc07c62d9839164473744d985be5d82685214f3750d990d9f61ef366e0ba112a766c925d640ed29b2a500b83568e895dc2444dcd5db01e615aac2b
   languageName: node
   linkType: hard
 
